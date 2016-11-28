@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_for_you"
+            android:icon="@drawable/ic_for_you"
+            android:title="@string/for_you_title" />
+        <item
+            android:id="@+id/nav_hottest"
+            android:icon="@drawable/hottest"
+            android:title="@string/hottest_title" />
+        <item
+            android:id="@+id/nav_wishlist"
+            android:icon="@drawable/favorite"
+            android:title="@string/my_wishlist_title" />
+        <item
+            android:id="@+id/nav_nearby"
+            android:icon="@drawable/near_me"
+            android:title="@string/nearby_title" />
+    </group>
+
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/nav_setting"
+                android:title="@string/settings_title" />
+            <item
+                android:id="@+id/nav_sign_in"
+                android:title="@string/sign_in_title" />
+        </menu>
+    </item>
+
+</menu>
