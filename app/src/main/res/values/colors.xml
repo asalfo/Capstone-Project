@@ -4,4 +4,17 @@
     <color name="colorPrimaryDark">#ff000000</color>
     <color name="colorAccent">#ff2d55</color>
     <color name="black_alpha_10">#1a000000</color>
+
+
+    <color name="black">#000000</color>
+
+    <color name="text_primary_dark">#ffffffff</color>
+    <color name="primary_text_color">@color/text_primary_dark</color>
+    <color name="text_color_standard">@android:color/white</color>
+    <color name="text_color_87">@android:color/white</color>
+    <color name="text_color_54">@android:color/white</color>
+
+    <color name="text_background">#90000000</color>
+    <color name="transparent_actionbar_background">#22000000</color>
+    <color name="lighter_gray">#ddd</color>
 </resources>

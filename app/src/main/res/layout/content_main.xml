@@ -1,78 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_main"
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000000"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.asalfo.wiulgi.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/bg"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/logo"
-        android:layout_alignParentStart="true"
-        android:contentDescription="@string/products_and_services_text"
-        android:scaleType="centerCrop" />
-
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/logo"
-        android:layout_marginTop="13dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:contentDescription="@string/logo" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/app_description"
-        android:textColor="#ffffff"
-        android:layout_marginTop="12dp"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:id="@+id/textview2" />
-
-
-    <Button
-        android:id="@+id/sign_up"
-        android:layout_width="248dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/button"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/join_us_now"
-        android:layout_below="@+id/textview2"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/already_a_member_sign_in"
-        android:textColor="#ffffff"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/best_choices_for_you"
-        android:textColor="#ffffff"
-        android:textStyle="bold"
-        android:layout_below="@+id/logo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="11dp" />
-</RelativeLayout>
+</FrameLayout>

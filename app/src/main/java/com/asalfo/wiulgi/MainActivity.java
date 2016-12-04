@@ -1,9 +1,9 @@
 package com.asalfo.wiulgi;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,8 +13,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.asalfo.wiulgi.sync.WiulgiSyncAdapter;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HottestFragment.OnFragmentInteractionListener {
 
 
 
@@ -40,6 +44,20 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        HottestFragment hottestFragment = HottestFragment.newInstance();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, hottestFragment)
+                .commit();
+
+        WiulgiSyncAdapter.initializeSyncAdapter(this);
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        if(!sharedPref.getBoolean(getString(R.string.fist_time),false)){
+            WiulgiSyncAdapter.syncImmediately(this);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(getString(R.string.fist_time), true);
+            editor.apply();
+        }
     }
 
     @Override
@@ -90,6 +108,10 @@ public class MainActivity extends AppCompatActivity
             setTitle(R.string.nearby_title);
         } else if (id == R.id.nav_hottest) {
             setTitle(R.string.hottest_title);
+            HottestFragment hottestFragment = HottestFragment.newInstance();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_main, hottestFragment)
+                    .commit();
         } else if (id == R.id.nav_setting) {
 
         } else if (id == R.id.nav_setting) {
@@ -99,5 +121,15 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }
