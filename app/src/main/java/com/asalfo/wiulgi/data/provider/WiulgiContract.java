@@ -3,7 +3,7 @@ package com.asalfo.wiulgi.data.provider;
 
 import android.net.Uri;
 
-public class ItemsContract {
+public class WiulgiContract {
 
     public static final String CONTENT_AUTHORITY = "com.asalfo.wiugli";
     public static final Uri BASE_URI = Uri.parse("content://com.asalfo.wiugli");
@@ -67,6 +67,6 @@ public class ItemsContract {
 
     }
 
-    private ItemsContract() {
+    private WiulgiContract() {
     }
 }

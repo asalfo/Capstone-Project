@@ -3,10 +3,6 @@ package com.asalfo.wiulgi.auth;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.asalfo.wiugli.model.Settings;
-import com.asalfo.wiugli.model.User;
-import com.facebook.login.LoginManager;
-
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -42,7 +38,7 @@ public class ProfileManager {
     }
 
     public void init(Context context) {
-        this.mSharedPreferences = context.getSharedPreferences("com.asalfo.wiugli.user", Context.MODE_PRIVATE);
+        this.mSharedPreferences = context.getSharedPreferences("com.asalfo.wiulgi.user", Context.MODE_PRIVATE);
         synchronized (ProfileManager.class) {
             if (isLoggedIn()) {
                 if (this.mSharedPreferences.contains("user")) {
@@ -121,7 +117,6 @@ public class ProfileManager {
             settings.setUserApiToken(null);
             settings.setUserAuthToken(null);
             settings.setUserId(null);
-            LoginManager.getInstance().logOut();
             this.mUser = null;
             save();
         }

@@ -1,11 +1,13 @@
 package com.asalfo.wiulgi.data.model;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.asalfo.wiulgi.data.provider.WiulgiContract;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
-
+import com.asalfo.wiulgi.data.provider.WiulgiContract.ItemsColumns;
 
 public class Item  extends Model implements Parcelable {
 
@@ -55,6 +57,27 @@ public class Item  extends Model implements Parcelable {
         this.mLocation = location;
         this.mPrice = price;
         this.mThumbnail = thumbnail;
+    }
+
+
+
+    public Item(Cursor cursor){
+
+        mId = cursor.getString(cursor.getColumnIndex(ItemsColumns._ID));
+        mTitle = cursor.getString(cursor.getColumnIndex(ItemsColumns.TITLE));
+        mDescription = cursor.getString(cursor.getColumnIndex(ItemsColumns.DESCRIPTION));
+        mPrice = Float.valueOf(cursor.getString(cursor.getColumnIndex(ItemsColumns.PRICE)));
+        mBrand = cursor.getString(cursor.getColumnIndex(ItemsColumns.BRAND));
+        mModel = cursor.getString(cursor.getColumnIndex(ItemsColumns.MODEL));
+        mSize  = cursor.getString(cursor.getColumnIndex(ItemsColumns.SIZE));
+        mColor = cursor.getString(cursor.getColumnIndex(ItemsColumns.COLOR));
+        mVoteAverage = Float.valueOf(cursor.getString(cursor.getColumnIndex(ItemsColumns.VOTE_AVERAGE)));
+        mVoteCount = Integer.valueOf(cursor.getString(cursor.getColumnIndex(ItemsColumns.VOTE_COUNT)));
+        mThumbnail = cursor.getString(cursor.getColumnIndex(ItemsColumns.THUMBNAIL));
+
+        Double latitude = Double.valueOf(cursor.getString(cursor.getColumnIndex(ItemsColumns.LATITUDE)));
+        Double longitude = Double.valueOf(cursor.getString(cursor.getColumnIndex(ItemsColumns.LONGITUDE)));
+        mLocation = new LatLng(latitude,longitude);
     }
 
 

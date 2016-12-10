@@ -8,28 +8,33 @@ import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.OperationApplicationException;
+import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
+import android.support.annotation.IntDef;
 import android.util.Log;
 
 import com.asalfo.wiulgi.BuildConfig;
 import com.asalfo.wiulgi.R;
 import com.asalfo.wiulgi.data.model.Item;
 import com.asalfo.wiulgi.data.model.WiugliCollection;
-import com.asalfo.wiulgi.data.provider.ItemsContract;
-import com.asalfo.wiulgi.data.provider.WiulgiProvider;
+import com.asalfo.wiulgi.data.provider.WiulgiContract;
 import com.asalfo.wiulgi.http.ApiInterface;
 import com.asalfo.wiulgi.http.ApiServiceGenerator;
 import com.asalfo.wiulgi.util.Utils;
 
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 import retrofit2.Call;
+import retrofit2.Response;
 
 public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
     public final String LOG_TAG = WiulgiSyncAdapter.class.getSimpleName();
@@ -38,6 +43,16 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
     public static final int SYNC_INTERVAL = 60 * 180;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
 
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({STATUS_OK, STATUS_SERVER_DOWN, STATUS_SERVER_INVALID, STATUS_UNKNOWN, STATUS_INVALID})
+    public @interface LocationStatus {}
+
+    public static final int STATUS_OK = 0;
+    public static final int STATUS_SERVER_DOWN = 1;
+    public static final int STATUS_SERVER_INVALID = 2;
+    public static final int STATUS_UNKNOWN = 3;
+    public static final int STATUS_INVALID = 4;
 
     private Context mContext ;
 
@@ -50,7 +65,6 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.d(LOG_TAG, "Starting sync");
 
-
         ApiInterface api = ApiServiceGenerator.createService(ApiInterface.class, null, null);
 
         String selection = extras.getString(ApiInterface.SELECTION);
@@ -59,18 +73,44 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
         Call<WiugliCollection<Item>> call = api.itemList(selection, page, BuildConfig.WIULGI_API_KEY);
 
         try {
+            Response<WiugliCollection<Item>> response = call.execute();
+
+            switch (response.code()){
+                case 200:
+                    WiugliCollection<Item> collection = response.body();
+                    setLocationStatus(getContext(), STATUS_OK);
+                    break;
+                case 401:
+                    setLocationStatus(getContext(), STATUS_SERVER_INVALID);
+                    return;
+                case 404:
+                    setLocationStatus(getContext(), STATUS_SERVER_INVALID);
+                    return;
+
+                case  500:
+                    setLocationStatus(getContext(), STATUS_SERVER_DOWN);
+                    return;
+
+                case  503:
+                    setLocationStatus(getContext(), STATUS_SERVER_DOWN);
+                    return;
+                default:
+                    setLocationStatus(getContext(), STATUS_INVALID);
+                    return;
+            }
+
             WiugliCollection<Item> collection = call.execute().body();
 
             try {
                 ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
-                Uri dirUri = ItemsContract.Items.buildDirUri();
+                Uri dirUri = WiulgiContract.Items.buildDirUri();
 
                 // Delete all items
                 batchOperations.add(ContentProviderOperation.newDelete(dirUri).build());
 
 
                 Utils.itemListToContentVals(batchOperations,collection.getItems());
-                mContext.getContentResolver().applyBatch(ItemsContract.CONTENT_AUTHORITY, batchOperations);
+                mContext.getContentResolver().applyBatch(WiulgiContract.CONTENT_AUTHORITY, batchOperations);
 
             } catch (NumberFormatException e) {
                 e.printStackTrace();
@@ -96,7 +136,7 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
      */
     public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
         Account account = getSyncAccount(context);
-        String authority = ItemsContract.CONTENT_AUTHORITY;
+        String authority = WiulgiContract.CONTENT_AUTHORITY;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // we can enable inexact timers in our periodic sync
             SyncRequest request = new SyncRequest.Builder().
@@ -119,7 +159,7 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         ContentResolver.requestSync(getSyncAccount(context),
-                ItemsContract.CONTENT_AUTHORITY, bundle);
+                WiulgiContract.CONTENT_AUTHORITY, bundle);
     }
 
     /**
@@ -170,7 +210,7 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
         /*
          * Without calling setSyncAutomatically, our periodic sync will not be enabled.
          */
-        ContentResolver.setSyncAutomatically(newAccount, ItemsContract.CONTENT_AUTHORITY, true);
+        ContentResolver.setSyncAutomatically(newAccount, WiulgiContract.CONTENT_AUTHORITY, true);
 
         /*
          * Finally, let's do a sync to get things started
@@ -180,5 +220,19 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
 
     public static void initializeSyncAdapter(Context context) {
         getSyncAccount(context);
+    }
+
+
+    /**
+     * Sets the server status into shared preference.  This function should not be called from
+     * the UI thread because it uses commit to write to the shared preferences.
+     * @param c Context to get the PreferenceManager from.
+     * @param locationStatus The IntDef value to set
+     */
+    static private void setLocationStatus(Context c, @LocationStatus int locationStatus){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putInt(c.getString(R.string.pref_server_status_key), locationStatus);
+        spe.commit();
     }
 }

@@ -28,9 +28,10 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/empty_photo"
                 android:scaleType="centerCrop"
-                android:transitionName="image"
+                android:transitionName="thumbnail"
                 android:baselineAlignBottom="true"
                 android:contentDescription="@string/thumbnail"
+
                 tools:targetApi="lollipop" />
 
             <TextView
@@ -39,12 +40,11 @@
                 android:layout_height="wrap_content"
                 android:gravity="bottom|end"
                 android:background="@color/text_background"
-                style="@style/Text.Subhead.Bold"
+                style="@style/ItemPrice"
                 android:textSize="20sp"
                 tools:text="7.7"
                 android:padding="4dp"
-                android:layout_gravity="bottom"
-                fontPath="fonts/Roboto-Black.ttf"/>
+                android:layout_gravity="bottom"/>
         </FrameLayout>
 
         <TextView

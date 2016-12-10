@@ -1,24 +1,39 @@
 package com.asalfo.wiulgi;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.TextView;
 
 
 import com.asalfo.wiulgi.data.provider.ItemLoader;
+import com.asalfo.wiulgi.data.provider.WiulgiContract;
+import com.asalfo.wiulgi.service.UtilityService;
+import com.asalfo.wiulgi.sync.WiulgiSyncAdapter;
 import com.asalfo.wiulgi.ui.ItemAdapter;
 import com.asalfo.wiulgi.ui.RecyclerViewItemClickListener;
 import com.asalfo.wiulgi.ui.WiugliRecyclerView;
+import com.asalfo.wiulgi.util.Utils;
+import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.maps.model.LatLng;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,11 +45,14 @@ public class HottestFragment extends Fragment  implements LoaderManager.LoaderCa
 
     @BindView(R.id.recycler_view)
     WiugliRecyclerView mRecyclerView;
+    @BindView(R.id.recyclerview_item_empty)
+    TextView mEmptyView;
     private ItemAdapter mAdapter;
     private OnFragmentInteractionListener mListener;
 
-    private boolean mItemClicked;
 
+    private boolean mItemClicked;
+    private LatLng mLatestLocation;
     private static final int ITEM_LOADER = 0;
 
 
@@ -59,6 +77,7 @@ public class HottestFragment extends Fragment  implements LoaderManager.LoaderCa
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,15 +95,20 @@ public class HottestFragment extends Fragment  implements LoaderManager.LoaderCa
 
             getLoaderManager().initLoader(ITEM_LOADER, null, this);
 
-            mAdapter = new ItemAdapter(getActivity());
-            mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getActivity(),
+            mAdapter = new ItemAdapter(getActivity(), new ItemAdapter.ItemAdapterOnClickHandler() {
+                @Override
+                public void onClick(Long itemId, ItemAdapter.ViewHolder vh) {
+                    onItemSelected(itemId,vh);
+                }
+            },mEmptyView);
+   /*         mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getActivity(),
                     new RecyclerViewItemClickListener.OnItemClickListener() {
                         @Override
                         public void onItemClick(View v, int position) {
                             long itemId = mAdapter.getItemId(position);
                             onItemSelected(itemId);
                         }
-                    }));
+                    }));*/
             mRecyclerView.setAdapter(mAdapter);
         }
 
@@ -103,6 +127,7 @@ public class HottestFragment extends Fragment  implements LoaderManager.LoaderCa
     public void onResume() {
         super.onResume();
         mItemClicked = false;
+
     }
 
 
@@ -124,6 +149,39 @@ public class HottestFragment extends Fragment  implements LoaderManager.LoaderCa
     }
 
 
+
+
+    /*
+            Updates the empty list view with contextually relevant information that the user can
+            use to determine why they aren't seeing weather.
+         */
+    private void updateEmptyView() {
+        if ( mAdapter.getItemCount() == 0 ) {
+
+            if ( null != mEmptyView ) {
+                // if cursor is empty, why? do we have an invalid location
+                int message = R.string.empty_list;
+                @WiulgiSyncAdapter.LocationStatus int location = Utils.getLocationStatus(getActivity());
+                switch (location) {
+                    case WiulgiSyncAdapter.STATUS_SERVER_DOWN:
+                        message = R.string.empty_item_list_server_down;
+                        break;
+                    case WiulgiSyncAdapter.STATUS_SERVER_INVALID:
+                        message = R.string.empty_item_list_server_error;
+                        break;
+                    case WiulgiSyncAdapter.STATUS_INVALID:
+                        message = R.string.empty_item_list_invalid_location;
+                        break;
+                    default:
+                        if (!Utils.isNetworkAvailable(getActivity())) {
+                            message = R.string.empty_item_list_no_network;
+                        }
+                }
+                mEmptyView.setText(message);
+            }
+        }
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return ItemLoader.newAllItemsInstance(getActivity());
@@ -140,9 +198,14 @@ public class HottestFragment extends Fragment  implements LoaderManager.LoaderCa
         mAdapter.swapCursor(null);
     }
 
-    public void onItemSelected(long itemId) {
+    public void onItemSelected(long itemId,ItemAdapter.ViewHolder vh) {
 
 
+        if (!mItemClicked) {
+            mItemClicked = true;
+            Uri contentUri = WiulgiContract.Items.buildItemUri(itemId);
+            mListener.onFragmentInteraction(contentUri,ItemDetailActivity.class,vh);
+        }
     }
 
 
@@ -157,7 +220,7 @@ public class HottestFragment extends Fragment  implements LoaderManager.LoaderCa
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+
+        void onFragmentInteraction(Uri uri, Class<?> cls, ItemAdapter.ViewHolder vh);
     }
 }

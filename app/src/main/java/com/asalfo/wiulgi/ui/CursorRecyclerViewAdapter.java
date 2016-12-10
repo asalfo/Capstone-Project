@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
 
-import com.asalfo.wiulgi.data.provider.ItemsContract;
+import com.asalfo.wiulgi.data.provider.WiulgiContract;
 
 
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH>{
@@ -17,7 +17,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
   CursorRecyclerViewAdapter(Context context, Cursor cursor){
     mCursor = cursor;
     dataIsValid = cursor != null;
-    rowIdColumn = dataIsValid ? mCursor.getColumnIndex(ItemsContract.ItemsColumns._ID) : -1;
+    rowIdColumn = dataIsValid ? mCursor.getColumnIndex(WiulgiContract.ItemsColumns._ID) : -1;
     mDataSetObserver = new NotifyingDataSetObserver();
     if (dataIsValid){
       mCursor.registerDataSetObserver(mDataSetObserver);
@@ -76,7 +76,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
       if (mDataSetObserver != null){
         mCursor.registerDataSetObserver(mDataSetObserver);
       }
-      rowIdColumn = newCursor.getColumnIndexOrThrow(ItemsContract.ItemsColumns._ID);
+      rowIdColumn = newCursor.getColumnIndexOrThrow(WiulgiContract.ItemsColumns._ID);
       dataIsValid = true;
       notifyDataSetChanged();
     }else{

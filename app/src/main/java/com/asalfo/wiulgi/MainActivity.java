@@ -1,10 +1,18 @@
 package com.asalfo.wiulgi;
 
+import android.*;
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,38 +20,55 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.asalfo.wiulgi.service.UtilityService;
 import com.asalfo.wiulgi.sync.WiulgiSyncAdapter;
+import com.asalfo.wiulgi.ui.ItemAdapter;
+import com.asalfo.wiulgi.util.Utils;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HottestFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        HottestFragment.OnFragmentInteractionListener,
+        ActivityCompat.OnRequestPermissionsResultCallback {
 
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.nav_view)
+    NavigationView mNavigationView;
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
+
+
+    private static final int PERMISSION_REQ = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
+
+        setSupportActionBar(mToolbar);
 
         mTitle = mDrawerTitle = getTitle();
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         HottestFragment hottestFragment = HottestFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
@@ -51,6 +76,7 @@ public class MainActivity extends AppCompatActivity
                 .commit();
 
         WiulgiSyncAdapter.initializeSyncAdapter(this);
+
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         if(!sharedPref.getBoolean(getString(R.string.fist_time),false)){
             WiulgiSyncAdapter.syncImmediately(this);
@@ -58,7 +84,20 @@ public class MainActivity extends AppCompatActivity
             editor.putBoolean(getString(R.string.fist_time), true);
             editor.apply();
         }
+
+        setupLocationService(savedInstanceState);
+
+
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        UtilityService.requestLocation(this);
+    }
+
+
 
     @Override
     public void onBackPressed() {
@@ -79,14 +118,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                supportFinishAfterTransition();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -124,7 +162,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onFragmentInteraction(Uri uri, Class<?> cls,ItemAdapter.ViewHolder vh) {
+
+
+        Intent intent = new Intent(this, cls)
+                .setData(uri);
+
+
+        ActivityOptionsCompat activityOptions =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                        new Pair<View, String>(vh.mThumbnail, getString(R.string.detail_thumnail_transition_name)));
+        ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
 
     }
 
@@ -132,4 +180,75 @@ public class MainActivity extends AppCompatActivity
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
+
+    /**
+     * Setup the location service
+     * @param savedInstanceState
+     */
+
+    private void setupLocationService(Bundle savedInstanceState) {
+        // Check fine location permission has been granted
+        if (!Utils.checkFineLocationPermission(this)) {
+            // See if user has denied permission in the past
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // Show a simple snackbar explaining the request instead
+                showPermissionSnackbar();
+            } else {
+                // Otherwise request permission from user
+                if (savedInstanceState == null) {
+                    requestFineLocationPermission();
+                }
+            }
+        } else {
+            // Otherwise permission is granted (which is always the case on pre-M devices)
+            fineLocationPermissionGranted();
+        }
+    }
+
+
+
+    /**
+     * Run when fine location permission has been granted
+     */
+    private void fineLocationPermissionGranted() {
+        UtilityService.requestLocation(this);
+    }
+
+    /**
+     * Permissions request result callback
+     */
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQ:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    fineLocationPermissionGranted();
+                }
+        }
+    }
+    /**
+     * Request the fine location permission from the user
+     */
+    private void requestFineLocationPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQ);
+    }
+    /**
+     * Show a permission explanation snackbar
+     */
+    private void showPermissionSnackbar() {
+        Snackbar.make(
+                findViewById(R.id.container), R.string.permission_explanation, Snackbar.LENGTH_LONG)
+                .setAction(R.string.permission_explanation_action, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestFineLocationPermission();
+                    }
+                })
+                .show();
+    }
+
 }

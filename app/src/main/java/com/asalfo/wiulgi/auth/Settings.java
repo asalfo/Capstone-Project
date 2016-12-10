@@ -4,7 +4,7 @@ package com.asalfo.wiulgi.auth;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.asalfo.wiulgi.WGApplication;
+import com.asalfo.wiulgi.WApplication;
 import com.asalfo.wiulgi.data.model.Model;
 import com.asalfo.wiulgi.util.Preferences;
 
@@ -40,7 +40,7 @@ public class Settings {
 
     private Settings() {
 
-        this.mContext = WGApplication.getContext();
+        this.mContext = WApplication.getContext();
         String settingsString = Preferences.getString(this.mContext, "com.asalfo.wiugli.settings");
         if (TextUtils.isEmpty(settingsString)) {
             this.mSettings = new SettingsObject();

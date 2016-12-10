@@ -8,6 +8,13 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="image_size">80dp</dimen>
 
+    <dimen name="header_view_start_margin_left">16dp</dimen>
+    <dimen name="header_view_end_margin_left">40dp</dimen>
+    <dimen name="header_view_end_margin_right">14dp</dimen>
+    <dimen name="header_view_start_margin_bottom">14dp</dimen>
+    <dimen name="header_view_start_text_size">32sp</dimen>
+    <dimen name="header_view_end_text_size">18sp</dimen>
+
     <integer name="list_columns">2</integer>
 
     <dimen name="text_micro">10.0sp</dimen>
@@ -24,5 +31,11 @@
     <dimen name="standard_margin">16dp</dimen>
     <dimen name="small_margin">8dp</dimen>
     <dimen name="tiny_margin">4dp</dimen>
+
+
+    <dimen name="item_name_text_size">20sp</dimen>
+    <dimen name="item_price_text_size">34sp</dimen>
+    <dimen name="item_distance_text_size">16sp</dimen>
+    <dimen name="item_description_text_size">15sp</dimen>
 
 </resources>

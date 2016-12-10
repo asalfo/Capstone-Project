@@ -28,7 +28,7 @@ public class Constants {
             "Failed to connect to GoogleApiClient (error code = %d)";
 
     // Used to size the images in the mobile app so they can animate cleanly from list to detail
-    public static final int IMAGE_ANIM_MULTIPLIER = 1;
+    public static final int IMAGE_ANIM_MULTIPLIER =2;
 
     // Resize images sent to Wear to 400x400px
     public static final int WEAR_IMAGE_SIZE = 400;

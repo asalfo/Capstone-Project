@@ -30,7 +30,7 @@ public class WiulgiProvider extends ContentProvider {
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-        final String authority = ItemsContract.CONTENT_AUTHORITY;
+        final String authority = WiulgiContract.CONTENT_AUTHORITY;
         matcher.addURI(authority, "items", ITEMS);
         matcher.addURI(authority, "items/#", ITEMS__ID);
         return matcher;
@@ -50,9 +50,9 @@ public class WiulgiProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case ITEMS:
-                return ItemsContract.Items.CONTENT_TYPE;
+                return WiulgiContract.Items.CONTENT_TYPE;
             case ITEMS__ID:
-                return ItemsContract.Items.CONTENT_ITEM_TYPE;
+                return WiulgiContract.Items.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -77,7 +77,7 @@ public class WiulgiProvider extends ContentProvider {
             case ITEMS: {
                 final long _id = db.insertOrThrow(Tables.ITEMS, null, contentValues);
                 getContext().getContentResolver().notifyChange(uri, null);
-                return ItemsContract.Items.buildItemUri(_id);
+                return WiulgiContract.Items.buildItemUri(_id);
             }
             default: {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -115,7 +115,7 @@ public class WiulgiProvider extends ContentProvider {
             }
             case ITEMS__ID: {
                 final String _id = paths.get(1);
-                return builder.table(Tables.ITEMS).where(ItemsContract.Items._ID + "=?", _id);
+                return builder.table(Tables.ITEMS).where(WiulgiContract.Items._ID + "=?", _id);
             }
             default: {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
