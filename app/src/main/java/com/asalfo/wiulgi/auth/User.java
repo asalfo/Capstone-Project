@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.asalfo.wiulgi.data.model.Model;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
@@ -31,6 +32,7 @@ public class User extends Model implements Parcelable {
     @SerializedName("avatar")
     private String mAvatar;
     @SerializedName("token")
+    @Expose(serialize = false)
     private String mAuthToken;
     @SerializedName("facebook_token")
     private String mFacebookToken;

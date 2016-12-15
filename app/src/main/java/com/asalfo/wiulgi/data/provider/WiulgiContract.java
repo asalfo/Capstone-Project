@@ -40,6 +40,10 @@ public class WiulgiContract {
         String VOTE_COUNT = "vote_count";
         /** Type: TEXT NOT NULL */
         String VOTE_AVERAGE = "vote_average";
+
+        String FAVORITED = "favorited";
+
+        String RECOMMENDED = "vote_average";
     }
 
     public static class Items implements ItemsColumns {

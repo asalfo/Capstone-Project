@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="56dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_in_with"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="80sp"
+            android:layout_marginBottom="30sp" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:clipChildren="true"
+            android:background="@drawable/shape">
+
+             <LinearLayout
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:orientation="horizontal"
+                 tools:ignore="UselessParent">
+
+                 <TextView
+                     android:id="@+id/email_label"
+                     android:labelFor="@+id/email_address"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:paddingLeft="2sp"
+                     android:paddingRight="2sp"
+                     android:textSize="17sp"
+                     android:text="@string/prompt_email"/>
+
+                 <EditText
+                     android:id="@+id/email_address"
+                     android:inputType="textEmailAddress"
+                     android:layout_width="253dp"
+                     android:layout_height="40sp"
+                     android:maxLines="1"
+                     android:textSize="17sp"
+                     android:background="@android:color/transparent" />
+             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <TextView
+                android:id="@+id/password_label"
+                android:labelFor="@+id/password_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="2sp"
+                android:paddingRight="2sp"
+                android:textSize="17sp"
+                android:text="@string/prompt_password"/>
+
+            <EditText
+                android:id="@+id/password"
+                android:inputType="textPassword"
+                android:layout_width="226dp"
+                android:layout_height="40sp"
+                android:maxLines="1"
+                android:textSize="17sp"
+                android:background="@android:color/transparent"
+                tools:ignore="LabelFor" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+        <Button
+            android:id="@+id/sign_in"
+            android:layout_width="248dp"
+            android:layout_height="46dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/button"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/session.sign_in" />
+
+        <TextView android:id="@+id/link_sign_up"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/not_a_member_register"
+            android:gravity="center"
+            android:textColor="#EF5350"
+            android:layout_marginTop="15dp" />
+
+        <TextView android:id="@+id/btn_password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/session.password_reset_forget"
+            android:textColor="#EF5350"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+
+
+</ScrollView>

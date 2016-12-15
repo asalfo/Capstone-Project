@@ -9,11 +9,11 @@
     <color name="primaryTextColor">#000000</color>
 
 
-
     <color name="black">#000000</color>
 
 
-
     <color name="text_background">#90000000</color>
+
+    <color name="black_overlay">#66000000</color>
 
 </resources>

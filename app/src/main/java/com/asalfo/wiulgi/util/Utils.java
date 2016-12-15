@@ -21,23 +21,31 @@ import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.asalfo.wiulgi.R;
 import com.asalfo.wiulgi.data.model.Item;
 import com.asalfo.wiulgi.data.provider.WiulgiContract;
+import com.asalfo.wiulgi.data.provider.WiulgiContract.ItemsColumns;
 import com.asalfo.wiulgi.sync.WiulgiSyncAdapter;
 import com.google.android.gms.maps.model.LatLng;
-
+import com.google.maps.android.SphericalUtil;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import com.asalfo.wiulgi.data.provider.WiulgiContract.ItemsColumns;
-import com.google.maps.android.SphericalUtil;
 
 
 public class Utils {
@@ -224,6 +232,14 @@ public class Utils {
         SharedPreferences.Editor spe = sp.edit();
         spe.putInt(c.getString(R.string.pref_server_status_key), WiulgiSyncAdapter.STATUS_UNKNOWN);
         spe.apply();
+    }
+
+
+   static public TextDrawable createTextDrawable(String username) {
+        ColorGenerator generator = ColorGenerator.MATERIAL;
+        int color = generator.getColor(username);
+        return TextDrawable.builder()
+                .buildRound(String.valueOf(username.charAt(0)), color);
     }
 
 }

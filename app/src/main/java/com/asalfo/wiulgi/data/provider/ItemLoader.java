@@ -36,7 +36,9 @@ public class ItemLoader  extends CursorLoader {
                WiulgiContract.Items.VOTE_COUNT,
                WiulgiContract.Items.VOTE_AVERAGE,
                WiulgiContract.Items.SIZE,
-               WiulgiContract.Items.COLOR
+               WiulgiContract.Items.COLOR,
+               WiulgiContract.Items.FAVORITED,
+               WiulgiContract.Items.RECOMMENDED
         };
 
         int _ID = 0;
@@ -52,6 +54,8 @@ public class ItemLoader  extends CursorLoader {
         int VOTE_AVERAGE = 10;
         int SIZE = 11;
         int COLOR = 12;
+        int FAVORITED = 13;
+        int RECOMMENDED = 14;
     }
 
 

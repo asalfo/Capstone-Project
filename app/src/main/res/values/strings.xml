@@ -26,12 +26,11 @@
     <string name="content_authority">com.asalfo.wiugli</string>
 
 
-
     <!-- For Shared Element Transitions -->
     <string name="detail_thumnail_transition_name" translatable="false">TN_DetailThumbnail</string>
 
 
-    <!-- Empty Weather Database -->
+    <!-- Empty Item Database -->
     <string name="empty_item_list">No item Information Available</string>
     <string name="empty_item_list_no_network">No item information available. The network is not available to fetch items data.</string>
     <string name="empty_item_list_server_down">No item information available. The server is not returning data.</string>
@@ -39,11 +38,75 @@
     <string name="empty_item_list_invalid_location">No item information available. The request is not recognized by the server.</string>
 
 
-
     <string name="permission_explanation">Allow this app to use your location to show distance to item store ?</string>
     <string name="permission_explanation_action">Let\'s do it!</string>
 
 
+    <!-- Strings related to login -->
+    <string name="prompt_username">Username</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_password_verify">Verify</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_up">Sign up</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_password_not_match">This password doesn\'t match</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="not_a_member_register">Not a member? Create an account</string>
+    <string name="agreemanent_title">Accept terms and conditions</string>
+    <string name="title_activity_sign_in">Sign in</string>
+    <string name="title_activity_sign_up">New account</string>
+    <string name="sign_out">Sign Out</string>
+
+    <string name="frist_name">Frist name</string>
+    <string name="last_name">Last name</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="gender">Gender</string>
+    <string name="birthdate">Birthdate</string>
+
+    <string name="action_cancel_profile">Save</string>
+    <string name="action_save_profile">Save</string>
+    <string name="action_edit_profile">Edit</string>
+
+
+    <string name="session.connect_to_website_to_view_all_infos">Connect to the %s website to access more features.</string>
+    <string name="session.dont_have_account">Don\'t have an account? Sign up!</string>
+    <string name="session.email_address">Email address</string>
+    <string name="session.error.invalid_password">Invalid password. Please try again or contact us if you have forgotten your password.</string>
+    <string name="session.error.invalid_user">Your account is not valid, please contact us.</string>
+    <string name="session.error.log_in_error">An error has occurred while logging in, please try again.</string>
+    <string name="session.error.password_reset.message">An error has occurred, please try again later</string>
+    <string name="session.error.unconfirmed_user">This account has not been activated yet. Please click on the link in the confirmation email we sent you (check your \'spam\' folder, or connect to %1$s to request another email).</string>
+    <string name="session.error.user_not_found">No user found with this email address</string>
+    <string name="session.sign_in">Sign in</string>
+    <string name="session.log_in.facebook">Log in with Facebook</string>
+    <string name="session.log_in.in_progress">Logging in…</string>
+    <string name="session.log_in.success">Logged in</string>
+    <string name="session.log_out">Log out</string>
+    <string name="session.password">Password</string>
+    <string name="session.password_reset_email_address">Email address:</string>
+    <string name="session.password_reset_forget">Forgot password?</string>
+    <string name="session.password_reset_mail_sent">We have sent you an email with instructions to reset your password.</string>
+    <string name="session.sign_up">Sign up</string>
+    <string name="session.sign_up.facebook">Sign up with Facebook</string>
+    <string name="session.sign_up.in_progress">Signing up…</string>
+    <string name="session.sign_up.success.message">Please activate your account through the email we sent you to %1$s</string>
+    <string name="session.sign_up.success.title">Successfully signed up!</string>
+
+    <string name="email_address">Email:</string>
+    <string name="sign_in_with">Sign in with</string>
+    <string name="sign_up_text">Create a new account</string>
+    <string name="wrong_credentials">The Email you entered couldn\'t be found or your password was incorrect. Please try again</string>
+    <string name="retry">OK</string>
+    <string name="service_unavailable">The service is unavailable, please try later.</string>
+    <string name="no_connection">You don\'t have internet connection </string>
+
+    <string name="cancel">Cancel</string>
+    <string name="send">Send</string>
     <string name="fist_time">first_time</string>
     <string name="title_activity_item_detail">ItemDetailActivity</string>
     <string name="brand">Brand</string>
@@ -56,4 +119,9 @@
     <string name="share_action_description_text">Share action</string>
     <string name="wishlists_action_description_text">Wishlists action</string>
     <string name="pref_server_status_key">server_status</string>
+    <string name="go_to_profile">go to your profile</string>
+    <string name="user_avatar">user avatar</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+
 </resources>

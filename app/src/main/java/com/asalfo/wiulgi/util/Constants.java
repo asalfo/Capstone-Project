@@ -77,4 +77,10 @@ public class Constants {
     public static final String ACTION_DATA_UPDATED = "com.asalfo.wiulgi.ACTION_DATA_UPDATED";
     public static final String TOKEN = "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXUyJ9.eyJ1c2VybmFtZSI6InRlc3Nkc3MiLCJpYXQiOiIxNDY4MDAxMjQyIn0.R1nk1ds7vIgslw0ncO3ZB7erHp26aOMyYUuVRSXowDzrU3zq1NWGrLeA6LysWhy1y2G9_IRqmDA3kHOU9UMAMtnt6-OzXC2dBaxeU_mDNzTCzcFT2sxGqh6vFdgYWW292scV6Yl4zl7MUwhAsEc-Iza_PhMVMZflMUbe5QbMoJcIs2QMB2vhZTheIEatssJ8VPQaARVJfpOnwDlGt6-7C19Mg6fBuhRtiFDSSckJjcNOSEefjIPajNmCLE3zO7at6ULG6fQ4Kq3ACxcV3hIscsWHhbtjRbLdlIaXBanoPPmG81VBkH6uIUvcf8xjrxLisU9CYOgDwOnawWb_k8dPxk9AbUzzHq2DVgeITYrD-6qEQQvni45ROvbPJuhGgZvyI4CxQ1ZNPXkwOvOa1Ywx2QnV7XAKoMgJiYOkDUtlSE1iPBoR9KTz6jDw-e9N97A-cbySzM0lOyzpr2Hy107_JwmPoETq31KJaDVhox7EWdfEJk5plyhCVD_ahfExUzGcbgI_Hn9GOcJLhiYfiFEsNwcOTPf7YSRLXYhvrI8l4YD04jCHRkXVNZBHKiszLBhdmGFDjOIaBztEPaMaaZaO_r7De9jLaEAfWiFZ9CyW7R4_Xo4q8AhACKqv9IHO5lZq1yPjmK8U8v5cPNsMBNNtzladLzKWME4qsFQUzvn2kh8";
 
+// Events type
+
+    public static final int ONLY_MESSAGE = 0;
+    public static final int LOGIN_SUCCESS = 1;
+    public static final int LOGOUT_SUCCESS = 2;
+
 }

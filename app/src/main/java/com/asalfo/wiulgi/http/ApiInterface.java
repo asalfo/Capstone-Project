@@ -37,7 +37,7 @@ public interface ApiInterface {
     Call<User> getUser(@Path("username") String username);
 
     @POST("/api/users")
-    Call<User> createUser(@Body User user);
+    Call<User> createUser(@Body User user,@Query("apikey") String api_key);
 
     @PUT("/api/users/{username}")
     Call<User> updateUser(@Path("username") String username, @Body User user);

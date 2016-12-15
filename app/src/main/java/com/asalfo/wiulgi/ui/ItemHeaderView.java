@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.asalfo.wiulgi.R;
+import com.asalfo.wiulgi.auth.ProfileManager;
 import com.asalfo.wiulgi.data.model.Item;
 import com.asalfo.wiulgi.util.Constants;
 import com.asalfo.wiulgi.util.Utils;
@@ -143,6 +144,17 @@ public class ItemHeaderView extends RelativeLayout {
             }
         });
 
+        if(ProfileManager.getInstance().isLoggedIn()){
+            mItemActionWishlist.setVisibility(VISIBLE);
+            mItemActionWishlist.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        }else{
+            mItemActionWishlist.setVisibility(INVISIBLE);
+        }
 
     }
 

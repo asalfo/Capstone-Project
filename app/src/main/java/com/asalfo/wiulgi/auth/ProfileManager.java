@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ProfileManager {
+
     private List<ProfileListener> mListeners;
     private SharedPreferences mSharedPreferences;
     private User mUser;
@@ -98,7 +99,7 @@ public class ProfileManager {
         return this.mUser;
     }
 
-    public void logIn(Context context, User user) {
+    public void logIn(User user) {
         Settings.getInstance().setUserApiToken(user.getAuthToken());
 
             synchronized (ProfileManager.class) {
@@ -111,7 +112,7 @@ public class ProfileManager {
 
 
 
-    public void logOut(Context context) {
+    public void logOut() {
         synchronized (ProfileManager.class) {
             Settings settings = Settings.getInstance();
             settings.setUserApiToken(null);

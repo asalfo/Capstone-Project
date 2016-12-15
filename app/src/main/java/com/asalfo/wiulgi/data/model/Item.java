@@ -35,9 +35,10 @@ public class Item  extends Model implements Parcelable {
     private String mThumbnail;
     @SerializedName("vote_count")
     private int mVoteCount;
-
     @SerializedName("vote_average")
     private float mVoteAverage;
+    private  boolean mFavorited;
+    private  boolean mRecommended;
 
 
 
@@ -78,6 +79,8 @@ public class Item  extends Model implements Parcelable {
         Double latitude = Double.valueOf(cursor.getString(cursor.getColumnIndex(ItemsColumns.LATITUDE)));
         Double longitude = Double.valueOf(cursor.getString(cursor.getColumnIndex(ItemsColumns.LONGITUDE)));
         mLocation = new LatLng(latitude,longitude);
+        mFavorited = cursor.getInt(cursor.getColumnIndex(ItemsColumns.FAVORITED)) > 0;
+        mRecommended = cursor.getInt(cursor.getColumnIndex(ItemsColumns.RECOMMENDED)) > 0;
     }
 
 
@@ -108,6 +111,8 @@ public class Item  extends Model implements Parcelable {
         this.mThumbnail = in.readString();
         this.mVoteAverage = in.readFloat();
         this.mVoteCount = in.readInt();
+        this.mFavorited = in.readInt() > 0;
+        this.mRecommended = in.readInt() > 0;
 
 
     }
@@ -133,6 +138,8 @@ public class Item  extends Model implements Parcelable {
         dest.writeString(mThumbnail);
         dest.writeFloat(mVoteAverage);
         dest.writeInt(mVoteCount);
+        dest.writeInt(mFavorited ? 1 : 0);
+        dest.writeInt(mRecommended ? 1 : 0);
 
 
     }
@@ -241,4 +248,23 @@ public class Item  extends Model implements Parcelable {
     public void setVoteCount(int voteCount) {
         this.mVoteCount = voteCount;
     }
+
+
+    public boolean getFavorited() {
+        return mFavorited;
+    }
+
+    public void setVoteCount(boolean favorited) {
+        this.mFavorited = favorited;
+    }
+
+
+    public boolean getRecommended() {
+        return mRecommended;
+    }
+
+    public void setRecommended(boolean recommended) {
+        this.mRecommended = recommended;
+    }
+
 }
