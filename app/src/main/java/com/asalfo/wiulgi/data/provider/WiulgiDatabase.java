@@ -33,7 +33,10 @@ public class WiulgiDatabase  extends SQLiteOpenHelper {
                 + WiulgiContract.ItemsColumns.LONGITUDE + " TEXT NOT NULL, "
                 + WiulgiContract.ItemsColumns.VOTE_AVERAGE + " FLOAT NOT NULL DEFAULT 0.0 ,"
                 + WiulgiContract.ItemsColumns.VOTE_COUNT + " INTEGER NOT NULL DEFAULT 0 ,"
-                + WiulgiContract.ItemsColumns.PRICE + " FLOAT NOT NULL DEFAULT 0.0 "
+                + WiulgiContract.ItemsColumns.PRICE + " FLOAT NOT NULL DEFAULT 0.0 ,"
+                + WiulgiContract.ItemsColumns.FAVORITED + " INT  DEFAULT 0 ,"
+                + WiulgiContract.ItemsColumns.RECOMMENDED + " INT DEFAULT 0 ,"
+                + WiulgiContract.ItemsColumns.WISHED + " INT DEFAULT 0 "
                 + ")" );
     }
 

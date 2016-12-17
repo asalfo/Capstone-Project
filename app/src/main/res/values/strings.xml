@@ -117,11 +117,17 @@
     <string name="read_more">Read more</string>
     <string name="thumnal_description_text">Item image</string>
     <string name="share_action_description_text">Share action</string>
-    <string name="wishlists_action_description_text">Wishlists action</string>
+    <string name="wishlist_action_description_text">Wishlist action</string>
+    <string name="like_action_description_text">Like action</string>
     <string name="pref_server_status_key">server_status</string>
     <string name="go_to_profile">go to your profile</string>
     <string name="user_avatar">user avatar</string>
     <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="added_to_favorite">The item %1$s has been marked as favorite</string>
+    <string name="removed_from_favorite">The item %1$s has been removed form your favorite</string>
+    <string name="added_to_wishlist">The item %1$s has been added to your wishlist </string>
+    <string name="removed_from_wishlist">The item %1$s has been removed form your wishlist</string>
 
 
 </resources>

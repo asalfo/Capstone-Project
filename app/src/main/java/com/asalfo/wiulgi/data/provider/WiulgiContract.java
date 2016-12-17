@@ -42,8 +42,8 @@ public class WiulgiContract {
         String VOTE_AVERAGE = "vote_average";
 
         String FAVORITED = "favorited";
-
-        String RECOMMENDED = "vote_average";
+        String RECOMMENDED = "recommended";
+        String WISHED = "wished";
     }
 
     public static class Items implements ItemsColumns {

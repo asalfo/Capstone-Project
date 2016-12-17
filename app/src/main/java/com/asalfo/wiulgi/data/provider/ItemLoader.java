@@ -38,7 +38,9 @@ public class ItemLoader  extends CursorLoader {
                WiulgiContract.Items.SIZE,
                WiulgiContract.Items.COLOR,
                WiulgiContract.Items.FAVORITED,
-               WiulgiContract.Items.RECOMMENDED
+               WiulgiContract.Items.RECOMMENDED,
+               WiulgiContract.Items.WISHED,
+               WiulgiContract.Items.MONGO_ID
         };
 
         int _ID = 0;
@@ -56,6 +58,8 @@ public class ItemLoader  extends CursorLoader {
         int COLOR = 12;
         int FAVORITED = 13;
         int RECOMMENDED = 14;
+        int WISHED = 15;
+        int MONGO_ID = 16;
     }
 
 

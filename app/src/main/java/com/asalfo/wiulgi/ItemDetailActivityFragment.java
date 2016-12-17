@@ -1,5 +1,6 @@
 package com.asalfo.wiulgi;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,11 +17,17 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.asalfo.wiulgi.auth.ProfileManager;
+import com.asalfo.wiulgi.auth.User;
 import com.asalfo.wiulgi.data.model.Item;
+import com.asalfo.wiulgi.data.model.Rating;
 import com.asalfo.wiulgi.data.provider.ItemLoader;
 import com.asalfo.wiulgi.data.provider.WiulgiContract;
 import com.asalfo.wiulgi.data.provider.WiulgiContract.ItemsColumns;
+import com.asalfo.wiulgi.event.MessageEvent;
 import com.asalfo.wiulgi.event.PaletteEvent;
+import com.asalfo.wiulgi.http.WiulgiApi;
+import com.asalfo.wiulgi.service.DatabaseUpdateTask;
 import com.asalfo.wiulgi.ui.WiulgiExpandableTextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,16 +42,21 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class ItemDetailActivityFragment extends Fragment  implements
         RatingBar.OnRatingBarChangeListener,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>,
+        WiulgiApi.OnApiResponseListener {
 
     public static final String LOG_TAG = ItemDetailActivityFragment.class.getSimpleName();
     public static final String EXTRA_ITEM = "itemUri";
@@ -65,11 +77,10 @@ public class ItemDetailActivityFragment extends Fragment  implements
     RatingBar mRatingBar;
 
 
-
-
-
+    WiulgiApi mApi;
     private GoogleMap mGoogleMap;
 
+    public   Item mItem;
     private String mItemTitle;
     private Uri mUri;
     private ItemDetailActivityFragment.OnFragmentInteractionListener mListener;
@@ -110,7 +121,10 @@ public class ItemDetailActivityFragment extends Fragment  implements
             return null;
         }
 
-        mRatingBar.setIsIndicator(false);
+        if(ProfileManager.getInstance().isLoggedIn()) {
+            mRatingBar.setIsIndicator(false);
+        }
+
         mRatingBar.setOnRatingBarChangeListener(this);
 
 
@@ -124,7 +138,7 @@ public class ItemDetailActivityFragment extends Fragment  implements
                 DETAIL_LOADER_MONGOID: DETAIL_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
 
-
+        mApi = new WiulgiApi(getActivity(),this);
     }
 
 
@@ -199,23 +213,18 @@ public class ItemDetailActivityFragment extends Fragment  implements
         Log.d(LOG_TAG, "onLoadFinished " + cursor.getCount());
         if (cursor != null && cursor.moveToFirst()) {
 
-
-
-            final Item item = new Item(cursor);
-
-
-            mListener.onFragmentLoad(item);
+            mItem = new Item(cursor);
 
             mItemTitle = cursor.getString(cursor.getColumnIndex(ItemsColumns.TITLE));
 
             mItemId = cursor.getLong(cursor.getColumnIndex(ItemsColumns._ID));
 
-            mDescriptionTextView.setText(item.getDescription());
-            mBrand.setText(item.getBrand());
-            mModel.setText(item.getModel());
-            mSize.setText(item.getSize());
-            mColor.setText(item.getColor());
-            mRatingBar.setRating(item.getVoteAverage());
+            mDescriptionTextView.setText(mItem.getDescription());
+            mBrand.setText(mItem.getBrand());
+            mModel.setText(mItem.getModel());
+            mSize.setText(mItem.getSize());
+            mColor.setText(mItem.getColor());
+            mRatingBar.setRating(mItem.getVoteAverage());
 
 
             ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(new OnMapReadyCallback() {
@@ -224,12 +233,12 @@ public class ItemDetailActivityFragment extends Fragment  implements
                     Log.d(LOG_TAG,"MapReady");
                     mGoogleMap = googleMap;
 
-                    MarkerOptions place = new MarkerOptions().position(item.getLocation())
+                    MarkerOptions place = new MarkerOptions().position(mItem.getLocation())
                             .title("Store");
                     mGoogleMap.addMarker(place);
 
                     CameraPosition target = new CameraPosition.Builder()
-                            .target(item.getLocation())
+                            .target(mItem.getLocation())
                             .zoom(14)
                             .build();
                     mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(target));
@@ -237,6 +246,8 @@ public class ItemDetailActivityFragment extends Fragment  implements
                 }
 
             });
+
+            mListener.onFragmentLoad(mItem);
         }
 
     }
@@ -251,13 +262,66 @@ public class ItemDetailActivityFragment extends Fragment  implements
 
 
     @Override
-    public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+
+        if(fromUser) {
+            User user = ProfileManager.getInstance().getUser();
+            if (null != user) {
+                Rating rat = new Rating();
+                rat.setItemId(mItem.getMongoId());
+                rat.setUserId(user.getId());
+                rat.setPreference(ratingBar.getRating());
+                mApi.rate(rat);
+            }
+        }
 
     }
 
 
+    @Override
+    public void onApiRequestFailure(int statusCode, String message) {
+        Log.d(LOG_TAG,message);
+        mRatingBar.setRating(mItem.getVoteAverage());
+        mRatingBar.refreshDrawableState();
+    }
 
+    @Override
+    public void onApiRequestFinish() {
 
+    }
+
+    @Override
+    public void onApiRequestStart() {
+
+    }
+
+    @Override
+    public void onApiRequestSuccess(int i, Response response) {
+     Log.d(LOG_TAG,response.body().toString());
+        try {
+            JSONObject jsonObj = new JSONObject(response.body().toString());
+            final JSONObject  item  = jsonObj.getJSONObject("itemi");
+            ContentValues cv = new ContentValues();
+            cv.put(WiulgiContract.Items.VOTE_AVERAGE, item.getString("vote_average"));
+            cv.put(WiulgiContract.Items.VOTE_COUNT, item.getString("vote_count"));
+
+            new DatabaseUpdateTask(getActivity(), cv, new DatabaseUpdateTask.AsyncCallback() {
+                @Override
+                public void onCallback() {
+
+                    try {
+                        mRatingBar.setRating(Float.valueOf(item.getString("vote_average")));
+                        mRatingBar.refreshDrawableState();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).execute(mItem.getId());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * This interface must be implemented by activities that contain this

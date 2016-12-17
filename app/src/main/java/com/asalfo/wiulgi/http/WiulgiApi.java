@@ -10,6 +10,7 @@ import com.asalfo.wiulgi.auth.Settings;
 import com.asalfo.wiulgi.auth.User;
 import com.asalfo.wiulgi.data.model.ApiError;
 import com.asalfo.wiulgi.data.model.Item;
+import com.asalfo.wiulgi.data.model.Rating;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -132,7 +133,7 @@ public class WiulgiApi {
     }
 
 
-    private void addToWhislist(Item item) {
+    public void addToWhislist(Item item,String action) {
 
         String token = "Bearer "+ Settings.getInstance().getUserApiToken();
 
@@ -141,23 +142,80 @@ public class WiulgiApi {
 
         User user = ProfileManager.getInstance().getUser();
         if (null != user) {
-            Call<User> call = apiEndPoint.addToWishlist(user.getUsername(),item.getId());
+            Call<User> call = apiEndPoint.addToWishlist(user.getUsername(),item.getMongoId(),action);
             call.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.isSuccessful()) {
-                        User user = response.body();
-                        mFavorite.setImageResource(R.drawable.ic_favorite);
-                        Log.d(LOG_TAG, user.getUsername());
+                        mListener.onApiRequestSuccess(response.code(),response);
                     } else {
                         ApiError error = ApiErrorUtil.parseError(response);
-                        Log.d(LOG_TAG, error.message());
+                        mListener.onApiRequestFailure(error.getStatusCode(),error.getMessage());
                     }
                 }
-
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
-                    Log.d(LOG_TAG, t.getMessage());
+                    mListener.onApiRequestFailure(500,t.getMessage());
+                }
+            });
+
+        }
+    }
+
+
+
+    public void like(Item item,String action) {
+
+        String token = "Bearer "+ Settings.getInstance().getUserApiToken();
+
+        ApiInterface apiEndPoint =
+                ApiServiceGenerator.createService(ApiInterface.class,token);
+
+        User user = ProfileManager.getInstance().getUser();
+        if (null != user) {
+            Call<User> call = apiEndPoint.like(user.getUsername(),item.getMongoId(),action);
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if (response.isSuccessful()) {
+                        mListener.onApiRequestSuccess(response.code(),response);
+                    } else {
+                        ApiError error = ApiErrorUtil.parseError(response);
+                        mListener.onApiRequestFailure(error.getStatusCode(),error.getMessage());
+                    }
+                }
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    mListener.onApiRequestFailure(500,t.getMessage());
+                }
+            });
+
+        }
+    }
+
+    public void rate(Rating rating) {
+
+        String token = "Bearer "+ Settings.getInstance().getUserApiToken();
+
+        ApiInterface apiEndPoint =
+                ApiServiceGenerator.createService(ApiInterface.class,token);
+
+        User user = ProfileManager.getInstance().getUser();
+        if (null != user) {
+            Call<Rating> call = apiEndPoint.rateItem(rating);
+            call.enqueue(new Callback<Rating>() {
+                @Override
+                public void onResponse(Call<Rating> call, Response<Rating> response) {
+                    if (response.isSuccessful()) {
+                        mListener.onApiRequestSuccess(response.code(),response);
+                    } else {
+                        ApiError error = ApiErrorUtil.parseError(response);
+                        mListener.onApiRequestFailure(error.getStatusCode(),error.getMessage());
+                    }
+                }
+                @Override
+                public void onFailure(Call<Rating> call, Throwable t) {
+                    mListener.onApiRequestFailure(500,t.getMessage());
                 }
             });
 

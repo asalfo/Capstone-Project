@@ -44,7 +44,11 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @PUT("/api/users/{username}/wishlist")
-    Call<User> addToWishlist (@Path("username") String username, @Field("item_id") String id);
+    Call<User> addToWishlist (@Path("username") String username, @Field("item_id") String id,@Field("action") String action);
+
+    @FormUrlEncoded
+    @PUT("/api/users/{username}/like")
+    Call<User> like (@Path("username") String username, @Field("item_id") String id,@Field("action") String action);
 
     @GET("/api/users/{username}/wishlist")
     Call<WiugliCollection<Item>> getWishlist (@Path("username") String username);

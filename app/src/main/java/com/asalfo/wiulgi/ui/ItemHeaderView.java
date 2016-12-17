@@ -1,11 +1,9 @@
 package com.asalfo.wiulgi.ui;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
@@ -23,11 +21,15 @@ import android.widget.TextView;
 import com.asalfo.wiulgi.R;
 import com.asalfo.wiulgi.auth.ProfileManager;
 import com.asalfo.wiulgi.data.model.Item;
-import com.asalfo.wiulgi.util.Constants;
+import com.asalfo.wiulgi.data.provider.WiulgiContract;
+import com.asalfo.wiulgi.event.EventCode;
+import com.asalfo.wiulgi.event.ItemEvent;
+import com.asalfo.wiulgi.event.MessageEvent;
+import com.asalfo.wiulgi.service.DatabaseUpdateTask;
 import com.asalfo.wiulgi.util.Utils;
 import com.google.android.gms.maps.model.LatLng;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -38,7 +40,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ItemHeaderView extends RelativeLayout {
-
 
 
     @BindView(R.id.item_info_wrapper)
@@ -57,8 +58,11 @@ public class ItemHeaderView extends RelativeLayout {
     ImageView mItemActionShare;
     @BindView(R.id.item_action_wishlist)
     ImageView mItemActionWishlist;
+    @BindView(R.id.item_action_like)
+    ImageView mItemActionLike;
 
     Context mContext;
+    private Item mItem;
 
     /**
      * Interface definition for a callback to be invoked when  the thumbnail  changes.
@@ -68,13 +72,12 @@ public class ItemHeaderView extends RelativeLayout {
          * Called when the ItemHeaderView 's thumbnail  url  has been changed.
          *
          * @param itemHeaderView the ItemHeaderView which url has changed
-         * @param thumnailUrl the url of the thumbnail
+         * @param thumnailUrl    the url of the thumbnail
          */
         void onThumbnailChanged(ItemHeaderView itemHeaderView, String thumnailUrl);
     }
 
     private List<OnThumbnailChangedListener> mListeners;
-
 
 
     public ItemHeaderView(Context context) {
@@ -103,10 +106,74 @@ public class ItemHeaderView extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.bind(this);
+
+        mItemActionWishlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                ContentValues cv = new ContentValues();
+                cv.put(WiulgiContract.Items.WISHED, mItem.getWhised() ? 0 : 1);
+
+                new DatabaseUpdateTask(mContext, cv, new DatabaseUpdateTask.AsyncCallback() {
+                    @Override
+                    public void onCallback() {
+                        if (mItem.getWhised()) {
+                            mItemActionWishlist.setImageResource(R.drawable.ic_remove_circle_outline);
+                            EventBus.getDefault().post(new ItemEvent(mItem,
+                                    String.format(mContext.getString(R.string.removed_from_wishlist),
+                                            mItem.getTitle()),EventCode.EVENT_REMOVE_WISHLIST));
+
+                        } else {
+                            mItemActionWishlist.setImageResource(R.drawable.ic_add);
+
+                            EventBus.getDefault().post(new ItemEvent(mItem, String.format(
+                                    mContext.getString(R.string.added_to_wishlist),
+                                    mItem.getTitle()),EventCode.EVENT_ADD_WISHLIST));
+                        }
+                    }
+                }).execute(mItem.getId());
+            }
+        });
+
+
+        mItemActionLike.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                ContentValues cv = new ContentValues();
+                cv.put(WiulgiContract.Items.FAVORITED, mItem.getFavorited() ? 0 : 1);
+
+                new DatabaseUpdateTask(mContext, cv, new DatabaseUpdateTask.AsyncCallback() {
+                    @Override
+                    public void onCallback() {
+                        if (mItem.getFavorited()) {
+
+                            EventBus.getDefault().post(new ItemEvent( mItem,
+                                    String.format(mContext.getString(R.string.added_to_favorite),
+                                            mItem.getTitle()), EventCode.EVENT_ADD_FAVORITE));
+
+                            mItemActionLike.setImageResource(R.drawable.ic_favorite_border);
+
+                        } else {
+
+                            mItemActionLike.setImageResource(R.drawable.ic_favorite);
+
+                            EventBus.getDefault().post(new ItemEvent(mItem,
+                                    String.format(mContext.getString(R.string.removed_from_favorite),
+                                            mItem.getTitle()),EventCode.EVENT_REMOVE_FAVORITE));
+                        }
+                    }
+                }).execute(mItem.getId());
+            }
+        });
     }
 
 
-    public void setItem(Item item){
+    public void setItem(Item item) {
+
+        mItem = item;
+
         setThumbnail(item.getThumbnail());
         mItemName.setText(item.getTitle());
 
@@ -119,49 +186,68 @@ public class ItemHeaderView extends RelativeLayout {
     }
 
 
-
-
-
-    public ImageView getItemThumbnail(){
-      return mItemThumnail ;
+    public ImageView getItemThumbnail() {
+        return mItemThumnail;
     }
 
-    public CharSequence getItemName(){
+    public ImageView getItemActionShare() {
+        return mItemActionShare;
+    }
+
+    public ImageView getItemActionLike() {
+        return mItemActionLike;
+    }
+
+    public ImageView getItemActionWishlist() {
+        return mItemActionWishlist;
+    }
+
+    public CharSequence getItemName() {
         return mItemName.getText();
     }
-    public void setupAction (final Item item){
+
+
+    public void setupAction(final Item item) {
 
         final String shareTitle = item.getTitle();
-        final String shareText = "Wiulgi#"+item.getTitle() + item.getDescription();
+        final String shareText = "Wiulgi#" + item.getTitle() + item.getDescription();
         mItemActionShare.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT,shareText);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
                 sendIntent.setType("text/plain");
                 mContext.startActivity(Intent.createChooser(sendIntent, shareTitle));
             }
         });
 
-        if(ProfileManager.getInstance().isLoggedIn()){
+        if (ProfileManager.getInstance().isLoggedIn()) {
+
+            if (mItem.getWhised()) {
+                mItemActionWishlist.setImageResource(R.drawable.ic_remove_circle_outline);
+            } else {
+                mItemActionWishlist.setImageResource(R.drawable.ic_add);
+            }
+
+            if (mItem.getFavorited()) {
+                mItemActionLike.setImageResource(R.drawable.ic_favorite);
+            } else {
+                mItemActionLike.setImageResource(R.drawable.ic_favorite_border);
+            }
+
             mItemActionWishlist.setVisibility(VISIBLE);
-            mItemActionWishlist.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            mItemActionLike.setVisibility(VISIBLE);
 
-                }
-            });
-        }else{
+        } else {
             mItemActionWishlist.setVisibility(INVISIBLE);
+            mItemActionLike.setVisibility(INVISIBLE);
         }
-
     }
 
-    public void setDistance(LatLng location){
+    public void setDistance(LatLng location) {
 
         LatLng myLocation = Utils.getLocation(mContext);
-
 
 
         String distance = Utils.formatDistanceBetween(location, myLocation);
@@ -173,9 +259,7 @@ public class ItemHeaderView extends RelativeLayout {
         mItemDistance.setText(distance);
     }
 
-    public  void setThumbnail(String thumnailUrl){
-
-
+    public void setThumbnail(String thumnailUrl) {
         // Dispatch the updates to any listeners
         dispatchThumbnailUrlUpdates(thumnailUrl);
 
@@ -191,12 +275,12 @@ public class ItemHeaderView extends RelativeLayout {
 
         if (textSwatch == null) {
 
-            int color = ContextCompat.getColor( mContext, R.color.black);
+            int color = ContextCompat.getColor(mContext, R.color.black);
             mItemName.setTextColor(color);
             mItemPrice.setTextColor(color);
             mItemDistance.setTextColor(color);
             mItemDistance.setTextColor(color);
-          return;
+            return;
 
         }
         mItemName.setTextColor(textSwatch.getTitleTextColor());
@@ -211,7 +295,6 @@ public class ItemHeaderView extends RelativeLayout {
      * Add a listener that will be called when the offset of this {@link AppBarLayout} changes.
      *
      * @param listener The listener that will be called when the thumbnail changes.]
-     *
      */
     public void addOnThumbnailChangedListener(OnThumbnailChangedListener listener) {
         if (mListeners == null) {
@@ -235,8 +318,6 @@ public class ItemHeaderView extends RelativeLayout {
     }
 
 
-
-
     void dispatchThumbnailUrlUpdates(String url) {
         // Iterate backwards through the list so that most recently added listeners
         // get the first chance to decide
@@ -249,4 +330,5 @@ public class ItemHeaderView extends RelativeLayout {
             }
         }
     }
+
 }

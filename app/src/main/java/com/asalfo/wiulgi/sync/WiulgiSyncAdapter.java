@@ -99,7 +99,6 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
                     return;
             }
 
-            WiugliCollection<Item> collection = call.execute().body();
 
             try {
                 ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
@@ -109,7 +108,7 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
                 batchOperations.add(ContentProviderOperation.newDelete(dirUri).build());
 
 
-                Utils.itemListToContentVals(batchOperations,collection.getItems());
+                Utils.itemListToContentVals(batchOperations,response.body().getItems());
                 mContext.getContentResolver().applyBatch(WiulgiContract.CONTENT_AUTHORITY, batchOperations);
 
             } catch (NumberFormatException e) {

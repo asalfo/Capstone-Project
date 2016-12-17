@@ -13,6 +13,7 @@ public class Item  extends Model implements Parcelable {
 
     @SerializedName("id")
     private String mId;
+    private String mMongoId;
     @SerializedName("title")
     private String mTitle;
     @SerializedName("slug")
@@ -39,6 +40,7 @@ public class Item  extends Model implements Parcelable {
     private float mVoteAverage;
     private  boolean mFavorited;
     private  boolean mRecommended;
+    private  boolean mWished;
 
 
 
@@ -65,6 +67,7 @@ public class Item  extends Model implements Parcelable {
     public Item(Cursor cursor){
 
         mId = cursor.getString(cursor.getColumnIndex(ItemsColumns._ID));
+        mMongoId = cursor.getString(cursor.getColumnIndex(ItemsColumns.MONGO_ID));
         mTitle = cursor.getString(cursor.getColumnIndex(ItemsColumns.TITLE));
         mDescription = cursor.getString(cursor.getColumnIndex(ItemsColumns.DESCRIPTION));
         mPrice = Float.valueOf(cursor.getString(cursor.getColumnIndex(ItemsColumns.PRICE)));
@@ -81,6 +84,7 @@ public class Item  extends Model implements Parcelable {
         mLocation = new LatLng(latitude,longitude);
         mFavorited = cursor.getInt(cursor.getColumnIndex(ItemsColumns.FAVORITED)) > 0;
         mRecommended = cursor.getInt(cursor.getColumnIndex(ItemsColumns.RECOMMENDED)) > 0;
+        mWished = cursor.getInt(cursor.getColumnIndex(ItemsColumns.WISHED)) > 0;
     }
 
 
@@ -100,6 +104,7 @@ public class Item  extends Model implements Parcelable {
     private Item(Parcel in) {
 
         this.mId = in.readString();
+        this.mMongoId = in.readString();
         this.mTitle = in.readString();
         this.mSlug = in.readString();
         this.mDescription = in.readString();
@@ -127,6 +132,7 @@ public class Item  extends Model implements Parcelable {
         long time;
 
         dest.writeString(mId);
+        dest.writeString(mMongoId);
         dest.writeString(mTitle);
         dest.writeString(mSlug);
         dest.writeString(mDescription);
@@ -265,6 +271,23 @@ public class Item  extends Model implements Parcelable {
 
     public void setRecommended(boolean recommended) {
         this.mRecommended = recommended;
+    }
+
+    public boolean getWhised() {
+        return mWished;
+    }
+
+    public void setWhised(boolean wished) {
+        this.mWished = wished;
+    }
+
+
+    public String getMongoId() {
+        return mMongoId;
+    }
+
+    public void setMongoId(String mongoId) {
+        this.mMongoId = mongoId;
     }
 
 }

@@ -70,12 +70,20 @@
             android:gravity="end"
             android:layout_weight="0.25"
             android:divider="?attr/dividerVertical">
+
             <ImageView
                 android:id="@+id/item_action_wishlist"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:src="@drawable/ic_add"
+                android:contentDescription="@string/wishlist_action_description_text" />
+
+            <ImageView
+                android:id="@+id/item_action_like"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:src="@drawable/ic_favorite_border"
-                android:contentDescription="@string/wishlists_action_description_text" />
+                android:contentDescription="@string/like_action_description_text" />
 
             <ImageView
                 android:id="@+id/item_action_share"
