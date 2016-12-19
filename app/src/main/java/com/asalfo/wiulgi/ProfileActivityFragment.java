@@ -201,8 +201,7 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
                 @Override
                 public void onClick(View view) {
                     ProfileManager.getInstance().logOut();
-                    mSignOut.setVisibility(View.INVISIBLE);
-                    mSignOutText.setVisibility(View.INVISIBLE);
+                   getActivity().finish();
                 }
             });
 
@@ -272,7 +271,6 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onProfileChanged(User user);
 
     }

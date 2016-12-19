@@ -1,4 +1,4 @@
-package com.asalfo.wiulgi.auth;
+package com.asalfo.wiulgi.util;
 
 
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.text.TextUtils;
 
 import com.asalfo.wiulgi.WApplication;
 import com.asalfo.wiulgi.data.model.Model;
-import com.asalfo.wiulgi.util.Preferences;
 
 public class Settings {
 
@@ -26,6 +25,7 @@ public class Settings {
         private String userAuthToken;
         private String userEmail;
         private Long userId;
+        private Boolean firstSync;
 
         private SettingsObject() {
         }
@@ -59,6 +59,8 @@ public class Settings {
         return this.mSettings.userEmail;
     }
 
+    public Boolean isFirstSync(){ return this.mSettings.firstSync; }
+
     public boolean hasUserEmail() {
         return !TextUtils.isEmpty(this.mSettings.userEmail);
     }
@@ -67,17 +69,28 @@ public class Settings {
         return this.mSettings.userApiToken;
     }
 
-    public void setUserApiToken(String userApiToken) {
-        this.mSettings.userApiToken = userApiToken;
-        save();
-    }
-
     public boolean hasApiToken() {
         return this.mSettings.userApiToken != null;
     }
 
+    public boolean hasFirstSync() {
+        return this.mSettings.firstSync != null;
+    }
+
     public String getUserAuthToken() {
         return this.mSettings.userAuthToken;
+    }
+
+    public Long getUserId() {
+        return this.mSettings.userId;
+    }
+
+    public boolean hasUserId() {
+        return this.mSettings.userId != null;
+    }
+
+    public String getRequestMessage() {
+        return this.mSettings.requestMessage;
     }
 
     public void setUserAuthToken(String userAuthToken) {
@@ -94,20 +107,23 @@ public class Settings {
         save();
     }
 
-    public Long getUserId() {
-        return this.mSettings.userId;
-    }
-
-    public boolean hasUserId() {
-        return this.mSettings.userId != null;
-    }
-
-    public String getRequestMessage() {
-        return this.mSettings.requestMessage;
-    }
-
     public void setRequestMessage(String message) {
         this.mSettings.requestMessage = message;
+        save();
+    }
+
+    public void setUserEmail(String email){
+        this.mSettings.userEmail = email;
+        save();
+    }
+
+    public void setUserApiToken(String userApiToken) {
+        this.mSettings.userApiToken = userApiToken;
+        save();
+    }
+
+    public void setFirstSync(Boolean sync){
+        this.mSettings.firstSync = sync;
         save();
     }
 

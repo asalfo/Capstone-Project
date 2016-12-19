@@ -36,8 +36,8 @@ public class WiulgiDatabase  extends SQLiteOpenHelper {
                 + WiulgiContract.ItemsColumns.PRICE + " FLOAT NOT NULL DEFAULT 0.0 ,"
                 + WiulgiContract.ItemsColumns.FAVORITED + " INT  DEFAULT 0 ,"
                 + WiulgiContract.ItemsColumns.RECOMMENDED + " INT DEFAULT 0 ,"
-                + WiulgiContract.ItemsColumns.WISHED + " INT DEFAULT 0 "
-                + ")" );
+                + WiulgiContract.ItemsColumns.WISHED + " INT DEFAULT 0 ," +
+                " UNIQUE("+ WiulgiContract.ItemsColumns.MONGO_ID +"))" );
     }
 
     @Override

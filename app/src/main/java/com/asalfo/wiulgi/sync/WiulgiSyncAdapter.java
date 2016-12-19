@@ -21,6 +21,7 @@ import android.util.Log;
 
 import com.asalfo.wiulgi.BuildConfig;
 import com.asalfo.wiulgi.R;
+import com.asalfo.wiulgi.util.Settings;
 import com.asalfo.wiulgi.data.model.Item;
 import com.asalfo.wiulgi.data.model.WiugliCollection;
 import com.asalfo.wiulgi.data.provider.WiulgiContract;
@@ -67,10 +68,10 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
 
         ApiInterface api = ApiServiceGenerator.createService(ApiInterface.class, null, null);
 
-        String selection = extras.getString(ApiInterface.SELECTION);
+        String filter = extras.getString(ApiInterface.SELECTION);
         int page = extras.getInt(ApiInterface.PAGE, 1);
 
-        Call<WiugliCollection<Item>> call = api.itemList(selection, page, BuildConfig.WIULGI_API_KEY);
+        Call<WiugliCollection<Item>> call = api.itemList(filter, page, BuildConfig.WIULGI_API_KEY);
 
         try {
             Response<WiugliCollection<Item>> response = call.execute();
@@ -103,13 +104,20 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
             try {
                 ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
                 Uri dirUri = WiulgiContract.Items.buildDirUri();
+                String selection = WiulgiContract.Items.WISHED+ "= ? AND "
+                        + WiulgiContract.Items.FAVORITED+ "= ? AND "
+                        + WiulgiContract.Items.RECOMMENDED+ "= ? " ;
 
-                // Delete all items
-                batchOperations.add(ContentProviderOperation.newDelete(dirUri).build());
+                String [] selectionArgs =  new String[]{"0","0","0"};
+
+                // Delete items
+                batchOperations.add(ContentProviderOperation.newDelete(dirUri).
+                        withSelection (selection,selectionArgs).build());
 
 
-                Utils.itemListToContentVals(batchOperations,response.body().getItems());
+              Utils.itemListToContentVals(batchOperations,response.body().getItems());
                 mContext.getContentResolver().applyBatch(WiulgiContract.CONTENT_AUTHORITY, batchOperations);
+
 
             } catch (NumberFormatException e) {
                 e.printStackTrace();

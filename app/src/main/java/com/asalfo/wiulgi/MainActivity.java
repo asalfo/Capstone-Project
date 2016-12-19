@@ -3,22 +3,19 @@ package com.asalfo.wiulgi;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,14 +24,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.asalfo.wiulgi.auth.ProfileManager;
+import com.asalfo.wiulgi.data.model.Item;
+import com.asalfo.wiulgi.util.Settings;
 import com.asalfo.wiulgi.service.UtilityService;
 import com.asalfo.wiulgi.sync.WiulgiSyncAdapter;
 import com.asalfo.wiulgi.ui.ItemAdapter;
 import com.asalfo.wiulgi.util.Utils;
-import com.google.android.gms.wearable.internal.StorageInfoResponse;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements
         ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final int REQUEST_SIGNIN = 1;
+    public static final int REQUEST_SIGNUP = 2;
     public static final int REQUEST_PROFILE = 1;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -58,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-
+    private WelcomeFragment mWelcomeFragment;
+    private Fragment mCurrentFragment;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
 
@@ -122,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements
 
         setSupportActionBar(mToolbar);
 
+        setTitle(R.string.hottest_title);
         mTitle = mDrawerTitle = getTitle();
 
 
@@ -133,22 +135,20 @@ public class MainActivity extends AppCompatActivity implements
 
         mNavigationView.setNavigationItemSelectedListener(this);
 
+        if(mCurrentFragment == null){
+            mCurrentFragment = HottestFragment.newInstance();
+        }
 
-
-        HottestFragment hottestFragment = HottestFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, hottestFragment)
+                .add(R.id.fragment_container, mCurrentFragment)
                 .commit();
 
         WiulgiSyncAdapter.initializeSyncAdapter(this);
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        if(!sharedPref.getBoolean(getString(R.string.fist_time),false)){
+       if(!Settings.getInstance().hasFirstSync()){
             WiulgiSyncAdapter.syncImmediately(this);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean(getString(R.string.fist_time), true);
-            editor.apply();
-        }
+         Settings.getInstance().setFirstSync(true);
+       }
 
         setupLocationService(savedInstanceState);
          if(ProfileManager.getInstance().isLoggedIn()){
@@ -224,24 +224,31 @@ public class MainActivity extends AppCompatActivity implements
 
         if (id == R.id.nav_for_you) {
             setTitle(R.string.for_you_title);
-            // Handle the camera action
+            mCurrentFragment = RecommendedFragment.newInstance();
         } else if (id == R.id.nav_wishlist) {
             setTitle(R.string.my_wishlist_title);
-
+            mCurrentFragment= WishlistFragment.newInstance();
         } else if (id == R.id.nav_nearby) {
             setTitle(R.string.nearby_title);
+            mCurrentFragment = NearbyFragment.newInstance();
+
         } else if (id == R.id.nav_hottest) {
             setTitle(R.string.hottest_title);
-            HottestFragment hottestFragment = HottestFragment.newInstance();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, hottestFragment)
-                    .commit();
+            mCurrentFragment = HottestFragment.newInstance();
         } else if (id == R.id.nav_setting) {
 
         } else if (id == R.id.nav_sign_in) {
             Intent login = new Intent(this, SignInActivity.class);
             startActivityForResult(login, REQUEST_SIGNIN);
         }
+
+        if(mCurrentFragment == null){
+            mCurrentFragment = new WelcomeFragment();
+        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, mCurrentFragment)
+                .commit();
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -264,6 +271,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onFragmentInteraction(Item item) {
+
+    }
+
+    @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
@@ -281,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 // Show a simple snackbar explaining the request instead
-                showPermissionSnackbar();
+                showPermissionDialog();
             } else {
                 // Otherwise request permission from user
                 if (savedInstanceState == null) {
@@ -326,16 +338,24 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Show a permission explanation snackbar
      */
-    private void showPermissionSnackbar() {
-        Snackbar.make(
-                findViewById(R.id.container), R.string.permission_explanation, Snackbar.LENGTH_LONG)
-                .setAction(R.string.permission_explanation_action, new View.OnClickListener() {
+    private void showPermissionDialog() {
+
+
+        new MaterialDialog.Builder(this)
+                .content(R.string.permission_explanation)
+                .positiveText(R.string.retry)
+                .negativeText(R.string.cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         requestFineLocationPermission();
                     }
                 })
                 .show();
+
     }
+
+
+
 
 }

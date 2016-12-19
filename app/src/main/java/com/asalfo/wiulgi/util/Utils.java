@@ -161,7 +161,7 @@ public class Utils {
 
              LatLng cord = item.getLocation();
 
-            builder.withValue(ItemsColumns.MONGO_ID, item.getId());
+            builder.withValue(ItemsColumns.MONGO_ID, item.getMongoId());
             builder.withValue(ItemsColumns.TITLE, item.getTitle());
             builder.withValue(ItemsColumns.SLUG, item.getSlug());
             builder.withValue(ItemsColumns.DESCRIPTION,item.getDescription());
@@ -181,6 +181,32 @@ public class Utils {
         return builder.build();
     }
 
+    public static ArrayList getItemsContentVals(ArrayList<ContentProviderOperation> batchOperations,ArrayList<Item> items,String column,String value){
+
+        if (items.size() > 0){
+            for (Item item : items){
+                batchOperations.add(buildUpdateBatchOperation(column,value,item.getMongoId()));
+            }
+        }
+        return batchOperations;
+    }
+
+
+    private static ContentProviderOperation buildUpdateBatchOperation(String column,String value,String mongo_id){
+
+        Uri dirUri = WiulgiContract.Items.buildDirUri();
+        ContentProviderOperation.Builder builder = ContentProviderOperation.newUpdate(
+                dirUri);
+
+
+        builder.withValue(column, value);
+        String selection = WiulgiContract.Items.MONGO_ID+ "= ?";
+        String [] selectionArgs = {mongo_id};
+        builder.withSelection(selection,selectionArgs);
+
+
+        return builder.build();
+    }
 
     public static boolean isFristTime(Context context) {
 

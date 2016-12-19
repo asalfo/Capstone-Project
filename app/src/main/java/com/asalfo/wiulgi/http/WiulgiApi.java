@@ -2,11 +2,10 @@ package com.asalfo.wiulgi.http;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import com.asalfo.wiulgi.BuildConfig;
 import com.asalfo.wiulgi.auth.ProfileManager;
-import com.asalfo.wiulgi.auth.Settings;
+import com.asalfo.wiulgi.util.Settings;
 import com.asalfo.wiulgi.auth.User;
 import com.asalfo.wiulgi.data.model.ApiError;
 import com.asalfo.wiulgi.data.model.Item;

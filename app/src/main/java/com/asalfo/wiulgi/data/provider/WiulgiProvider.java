@@ -7,6 +7,8 @@ import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
@@ -75,9 +77,12 @@ public class WiulgiProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case ITEMS: {
-                final long _id = db.insertOrThrow(Tables.ITEMS, null, contentValues);
+               /* final long _id = db.insertOrThrow(Tables.ITEMS, null, contentValues);*/
+                long _id = insertOrUpdateByMongoId(db,uri,Tables.ITEMS,contentValues,WiulgiContract.Items.MONGO_ID);
                 getContext().getContentResolver().notifyChange(uri, null);
+                // TODO: find the way to build a correct URI when item is updated on conflict
                 return WiulgiContract.Items.buildItemUri(_id);
+
             }
             default: {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -144,5 +149,30 @@ public class WiulgiProvider extends ContentProvider {
         } finally {
             db.endTransaction();
         }
+    }
+
+
+
+    /**
+     * In case of a conflict when inserting the values, another update query is sent.
+     *
+     * @param db     Database to insert to.
+     * @param uri    Content provider uri.
+     * @param table  Table to insert to.
+     * @param values The values to insert to.
+     * @param column Column to identify the object.
+     * @throws android.database.SQLException
+     */
+    private long insertOrUpdateByMongoId(SQLiteDatabase db, Uri uri, String table,
+                                    ContentValues values, String column) throws SQLException {
+        try {
+          return  db.insertOrThrow(table, null, values);
+        } catch (SQLiteConstraintException e) {
+            int nrRows = update(uri, values, column + "=?",
+                    new String[]{values.getAsString(column)});
+            if (nrRows == 0)
+                throw e;
+        }
+        return 0;
     }
 }

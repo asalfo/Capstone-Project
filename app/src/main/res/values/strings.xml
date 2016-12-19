@@ -15,7 +15,7 @@
     <string name="for_you_title">For You</string>
     <string name="hottest_title">Hottest</string>
     <string name="my_wishlist_title">My Wishlist</string>
-    <string name="nearby_title">Nearby</string>
+    <string name="nearby_title">Items Around You</string>
     <string name="settings_title">Settings</string>
     <string name="sign_in_title">Sign In</string>
     <string name="thumbnail">Thumbnail</string>
@@ -115,7 +115,7 @@
     <string name="product_image">Product image</string>
     <string name="size">Size</string>
     <string name="read_more">Read more</string>
-    <string name="thumnal_description_text">Item image</string>
+    <string name="thumbnail_description_text">Item image</string>
     <string name="share_action_description_text">Share action</string>
     <string name="wishlist_action_description_text">Wishlist action</string>
     <string name="like_action_description_text">Like action</string>
@@ -129,5 +129,8 @@
     <string name="added_to_wishlist">The item %1$s has been added to your wishlist </string>
     <string name="removed_from_wishlist">The item %1$s has been removed form your wishlist</string>
 
+    <string name="widget_title"> Wiulgi Hottest Item</string>
+    <string name="currency">%1$s$</string>
 
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 </resources>

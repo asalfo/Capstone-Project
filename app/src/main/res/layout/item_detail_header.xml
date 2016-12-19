@@ -20,7 +20,7 @@
         android:fitsSystemWindows="true"
         tools:src="@drawable/deadpool"
         app:layout_collapseMode="parallax"
-        android:contentDescription="@string/thumnal_description_text" />
+        android:contentDescription="@string/thumbnail_description_text" />
 
     <LinearLayout
         android:id="@+id/item_info_wrapper"

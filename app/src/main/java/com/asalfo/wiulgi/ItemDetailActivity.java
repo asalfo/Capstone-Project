@@ -20,6 +20,7 @@ import com.asalfo.wiulgi.event.EventCode;
 import com.asalfo.wiulgi.event.ItemEvent;
 import com.asalfo.wiulgi.event.MessageEvent;
 import com.asalfo.wiulgi.http.WiulgiApi;
+import com.asalfo.wiulgi.ui.ItemAdapter;
 import com.asalfo.wiulgi.ui.ItemHeaderView;
 import com.asalfo.wiulgi.util.Constants;
 import com.squareup.picasso.Picasso;
@@ -162,13 +163,14 @@ public class ItemDetailActivity extends AppCompatActivity
         }
     }
 
+
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onFragmentInteraction(Uri uri, Class<?> cls, ItemAdapter.ViewHolder vh) {
 
     }
 
     @Override
-    public void onFragmentLoad(final Item item) {
+    public void onFragmentInteraction(final Item item) {
         mItemHeaderView.setItem(item);
 
     }

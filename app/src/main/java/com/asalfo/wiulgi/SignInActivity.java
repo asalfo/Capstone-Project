@@ -1,10 +1,15 @@
 package com.asalfo.wiulgi;
 
 
+import android.content.ContentProviderOperation;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -13,17 +18,21 @@ import android.widget.EditText;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.asalfo.wiulgi.auth.ProfileManager;
-import com.asalfo.wiulgi.auth.Settings;
+import com.asalfo.wiulgi.data.provider.WiulgiContract;
+import com.asalfo.wiulgi.util.Settings;
 import com.asalfo.wiulgi.auth.User;
 import com.asalfo.wiulgi.event.MessageEvent;
 import com.asalfo.wiulgi.event.UserEvent;
 import com.asalfo.wiulgi.http.WiulgiApi;
 import com.asalfo.wiulgi.util.Constants;
+import com.asalfo.wiulgi.util.Utils;
 
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -225,10 +234,35 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
             mProgess.dismiss();
         }
 
-        User user = (User) response.body();
+        final User user = (User) response.body();
         ProfileManager.getInstance().logIn(user);
+
+        new Thread(new Runnable() {
+            public void run() {
+                updateItems(user);
+            }
+        }).start();
+
         setResult(RESULT_OK);
         finish();
 
+    }
+
+
+
+    private void updateItems(User user){
+
+        ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
+
+        Utils.getItemsContentVals(batchOperations,user.getLikedItems(), WiulgiContract.Items.FAVORITED,"1");
+        Utils.getItemsContentVals(batchOperations,user.getWishlistItems(), WiulgiContract.Items.WISHED,"1");
+        Utils.getItemsContentVals(batchOperations,user.getRecommendedItems(), WiulgiContract.Items.RECOMMENDED,"1");
+        try {
+            getContentResolver().applyBatch(WiulgiContract.CONTENT_AUTHORITY, batchOperations);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (OperationApplicationException e) {
+            e.printStackTrace();
+        }
     }
 }

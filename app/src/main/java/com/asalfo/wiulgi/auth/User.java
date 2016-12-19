@@ -1,11 +1,18 @@
 package com.asalfo.wiulgi.auth;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.util.ArrayMap;
+import android.support.v4.util.Pair;
 
+import com.asalfo.wiulgi.data.model.Item;
 import com.asalfo.wiulgi.data.model.Model;
+import com.asalfo.wiulgi.data.provider.WiulgiContract;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 
 
 public class User extends Model implements Parcelable {
@@ -36,6 +43,12 @@ public class User extends Model implements Parcelable {
     private String mAuthToken;
     @SerializedName("facebook_token")
     private String mFacebookToken;
+    @SerializedName("likes")
+    private ArrayList<Item> likedItems;
+    @SerializedName("wishlist")
+    private ArrayList<Item> wishlistItems;
+    @SerializedName("recommended_items")
+    private ArrayList<Item> recommendedItems;
 
 
     public User() {
@@ -200,5 +213,30 @@ public class User extends Model implements Parcelable {
 
     public void setFacebookToken(String mFacebookToken) {
         this.mFacebookToken = mFacebookToken;
+    }
+
+
+    public ArrayList<Item> getRecommendedItems() {
+        return recommendedItems;
+    }
+
+    public void setRecommendedItems(ArrayList<Item> recommendedItems) {
+        this.recommendedItems = recommendedItems;
+    }
+
+    public ArrayList<Item> getLikedItems() {
+        return likedItems;
+    }
+
+    public void setLikedItems(ArrayList<Item> likedItems) {
+        this.likedItems = likedItems;
+    }
+
+    public ArrayList<Item> getWishlistItems() {
+        return wishlistItems;
+    }
+
+    public void setWishlistItems(ArrayList<Item> wishlistItems) {
+        this.wishlistItems = wishlistItems;
     }
 }

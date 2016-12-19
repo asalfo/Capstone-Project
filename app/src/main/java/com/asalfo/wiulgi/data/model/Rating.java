@@ -10,7 +10,7 @@ public class Rating  extends Model {
     private String mUserId;
     @SerializedName("item")
     private String mItemId;
-    @SerializedName("itemi")
+    @SerializedName("item")
     private Item mItem;
     @SerializedName("preference")
     private float mPreference;

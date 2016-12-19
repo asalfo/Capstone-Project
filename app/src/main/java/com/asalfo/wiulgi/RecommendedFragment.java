@@ -1,46 +1,32 @@
 package com.asalfo.wiulgi;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.TypedArray;
 import android.database.Cursor;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.TextView;
 
-
+import com.asalfo.wiulgi.auth.ProfileManager;
 import com.asalfo.wiulgi.data.provider.ItemLoader;
 import com.asalfo.wiulgi.data.provider.WiulgiContract;
-import com.asalfo.wiulgi.service.UtilityService;
 import com.asalfo.wiulgi.sync.WiulgiSyncAdapter;
 import com.asalfo.wiulgi.ui.ItemAdapter;
-import com.asalfo.wiulgi.ui.RecyclerViewItemClickListener;
 import com.asalfo.wiulgi.ui.WiugliRecyclerView;
 import com.asalfo.wiulgi.util.Utils;
-import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.maps.model.LatLng;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class HottestFragment extends BaseFragment {
+public class RecommendedFragment extends BaseFragment {
 
 
 
@@ -57,13 +43,15 @@ public class HottestFragment extends BaseFragment {
     private static final int ITEM_LOADER = 0;
 
 
-    public HottestFragment() {
+    public RecommendedFragment() {
 
     }
 
 
-    public static HottestFragment newInstance() {
-        HottestFragment fragment = new HottestFragment();
+    public static RecommendedFragment newInstance() {
+        if(!ProfileManager.getInstance().isLoggedIn())
+            return null;
+        RecommendedFragment fragment = new RecommendedFragment();
         Bundle args = new Bundle();
 
         fragment.setArguments(args);
@@ -87,21 +75,6 @@ public class HottestFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_hottest, container, false);
         ButterKnife.bind(this, view);
         if (mRecyclerView != null) {
-
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-
-                    if(position <= 3) return 1;
-                    if (position % 4 == 0) {
-                        return 2;
-                    } else {
-                        return 1;
-                    }
-                }
-            });
-            mRecyclerView.setLayoutManager(gridLayoutManager);
             mRecyclerView.setEmptyView(view.findViewById(android.R.id.empty));
             RecyclerView.ItemDecoration itemDecoration =
                     new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);
@@ -200,7 +173,11 @@ public class HottestFragment extends BaseFragment {
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return ItemLoader.newAllItemsInstance(getActivity());
+        ItemLoader loader = ItemLoader.newAllItemsInstance(getActivity());
+     loader.setSelection(WiulgiContract.Items.RECOMMENDED+" = ?");
+        loader.setSelectionArgs(new String[]{"1"});
+
+        return loader;
     }
 
     @Override

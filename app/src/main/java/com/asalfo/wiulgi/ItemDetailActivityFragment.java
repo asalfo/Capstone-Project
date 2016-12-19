@@ -24,7 +24,6 @@ import com.asalfo.wiulgi.data.model.Rating;
 import com.asalfo.wiulgi.data.provider.ItemLoader;
 import com.asalfo.wiulgi.data.provider.WiulgiContract;
 import com.asalfo.wiulgi.data.provider.WiulgiContract.ItemsColumns;
-import com.asalfo.wiulgi.event.MessageEvent;
 import com.asalfo.wiulgi.event.PaletteEvent;
 import com.asalfo.wiulgi.http.WiulgiApi;
 import com.asalfo.wiulgi.service.DatabaseUpdateTask;
@@ -32,11 +31,9 @@ import com.asalfo.wiulgi.ui.WiulgiExpandableTextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.greenrobot.eventbus.EventBus;
@@ -47,15 +44,13 @@ import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
 import retrofit2.Response;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ItemDetailActivityFragment extends Fragment  implements
+public class ItemDetailActivityFragment extends BaseFragment  implements
         RatingBar.OnRatingBarChangeListener,
-        LoaderManager.LoaderCallbacks<Cursor>,
         WiulgiApi.OnApiResponseListener {
 
     public static final String LOG_TAG = ItemDetailActivityFragment.class.getSimpleName();
@@ -247,7 +242,7 @@ public class ItemDetailActivityFragment extends Fragment  implements
 
             });
 
-            mListener.onFragmentLoad(mItem);
+            mListener.onFragmentInteraction(mItem);
         }
 
     }
@@ -323,19 +318,5 @@ public class ItemDetailActivityFragment extends Fragment  implements
         }
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-        void onFragmentLoad(Item item);
-    }
+
 }

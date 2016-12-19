@@ -3,6 +3,8 @@ package com.asalfo.wiulgi.auth;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.asalfo.wiulgi.util.Settings;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 

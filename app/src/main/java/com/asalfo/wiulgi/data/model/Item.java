@@ -11,8 +11,9 @@ import com.asalfo.wiulgi.data.provider.WiulgiContract.ItemsColumns;
 
 public class Item  extends Model implements Parcelable {
 
-    @SerializedName("id")
+
     private String mId;
+    @SerializedName("id")
     private String mMongoId;
     @SerializedName("title")
     private String mTitle;

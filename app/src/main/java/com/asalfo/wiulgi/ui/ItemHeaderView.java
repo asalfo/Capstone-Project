@@ -150,8 +150,8 @@ public class ItemHeaderView extends RelativeLayout {
                         if (mItem.getFavorited()) {
 
                             EventBus.getDefault().post(new ItemEvent( mItem,
-                                    String.format(mContext.getString(R.string.added_to_favorite),
-                                            mItem.getTitle()), EventCode.EVENT_ADD_FAVORITE));
+                                    String.format(mContext.getString(R.string.removed_from_favorite),
+                                            mItem.getTitle()), EventCode.EVENT_REMOVE_FAVORITE));
 
                             mItemActionLike.setImageResource(R.drawable.ic_favorite_border);
 
@@ -160,8 +160,8 @@ public class ItemHeaderView extends RelativeLayout {
                             mItemActionLike.setImageResource(R.drawable.ic_favorite);
 
                             EventBus.getDefault().post(new ItemEvent(mItem,
-                                    String.format(mContext.getString(R.string.removed_from_favorite),
-                                            mItem.getTitle()),EventCode.EVENT_REMOVE_FAVORITE));
+                                    String.format(mContext.getString(R.string.added_to_favorite),
+                                            mItem.getTitle()),EventCode.EVENT_ADD_FAVORITE));
                         }
                     }
                 }).execute(mItem.getId());
