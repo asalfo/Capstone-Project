@@ -18,6 +18,8 @@ import android.widget.TextView;
 import com.asalfo.wiulgi.auth.ProfileManager;
 import com.asalfo.wiulgi.auth.User;
 import com.asalfo.wiulgi.http.WiulgiApi;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,8 +49,9 @@ public class SignUpActivity extends AppCompatActivity implements OnKeyListener,W
         @BindView(R.id.agreement)
         AppCompatCheckBox mAgreement;
 
+        WiulgiApi mApi;
 
-         WiulgiApi mApi;
+    private Tracker mTracker;
 
 
         @Override
@@ -59,6 +62,12 @@ public class SignUpActivity extends AppCompatActivity implements OnKeyListener,W
             ButterKnife.bind(this);
             initUI();
             mApi = new WiulgiApi(this,this);
+
+            // Obtain the shared Tracker instance.
+            WApplication application = (WApplication) getApplication();
+            mTracker = application.getDefaultTracker();
+            mTracker.setScreenName(getString(R.string.sing_up_activity_title));
+            mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         }
 
 

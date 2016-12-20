@@ -12,6 +12,8 @@ import android.view.View;
 
 import com.asalfo.wiulgi.auth.User;
 import com.asalfo.wiulgi.http.WiulgiApi;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +30,7 @@ public class ProfileActivity extends AppCompatActivity  implements
 
 
     private WiulgiApi mApi;
+    private Tracker mTracker;
 
 
 
@@ -49,6 +52,11 @@ public class ProfileActivity extends AppCompatActivity  implements
                     .commit();
 
         }
+        // Obtain the shared Tracker instance.
+        WApplication application = (WApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+        mTracker.setScreenName(getString(R.string.profile_activity_title));
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
 

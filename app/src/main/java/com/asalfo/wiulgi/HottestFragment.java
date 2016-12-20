@@ -18,6 +18,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,25 +34,33 @@ import com.asalfo.wiulgi.ui.ItemAdapter;
 import com.asalfo.wiulgi.ui.RecyclerViewItemClickListener;
 import com.asalfo.wiulgi.ui.WiugliRecyclerView;
 import com.asalfo.wiulgi.util.Utils;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.maps.model.LatLng;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.google.android.gms.internal.zzs.TAG;
+
 
 public class HottestFragment extends BaseFragment {
-
 
 
     @BindView(R.id.recycler_view)
     WiugliRecyclerView mRecyclerView;
     @BindView(R.id.recyclerview_item_empty)
     TextView mEmptyView;
+    @BindView(R.id.adView)
+    AdView mAdView;
     private ItemAdapter mAdapter;
     private OnFragmentInteractionListener mListener;
 
 
+    private String mTitle;
     private boolean mItemClicked;
     private LatLng mLatestLocation;
     private static final int ITEM_LOADER = 0;
@@ -62,21 +71,15 @@ public class HottestFragment extends BaseFragment {
     }
 
 
-    public static HottestFragment newInstance() {
+    public static HottestFragment newInstance(String title) {
         HottestFragment fragment = new HottestFragment();
         Bundle args = new Bundle();
-
+        args.putString(BaseFragment.ACTIVITY_TITLE,title);
         fragment.setArguments(args);
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
 
-        }
-    }
 
 
     @Override
@@ -88,7 +91,7 @@ public class HottestFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         if (mRecyclerView != null) {
 
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+            /*GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
@@ -101,7 +104,7 @@ public class HottestFragment extends BaseFragment {
                     }
                 }
             });
-            mRecyclerView.setLayoutManager(gridLayoutManager);
+            mRecyclerView.setLayoutManager(gridLayoutManager);*/
             mRecyclerView.setEmptyView(view.findViewById(android.R.id.empty));
             RecyclerView.ItemDecoration itemDecoration =
                     new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);
@@ -128,6 +131,7 @@ public class HottestFragment extends BaseFragment {
             mRecyclerView.setAdapter(mAdapter);
         }
 
+
        return view;
     }
 
@@ -136,6 +140,13 @@ public class HottestFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(ITEM_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
+
+        sendScreenNameToGAnalytics();
     }
 
 
@@ -223,7 +234,5 @@ public class HottestFragment extends BaseFragment {
             mListener.onFragmentInteraction(contentUri,ItemDetailActivity.class,vh);
         }
     }
-
-
 
 }

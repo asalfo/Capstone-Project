@@ -1,26 +1,26 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.asalfo.wiulgi.HottestFragment"
     android:paddingTop="56dp">
     <com.asalfo.wiulgi.ui.WiugliRecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:scrollbarStyle="outsideOverlay"
         app:layoutManager="GridLayoutManager"
         app:spanCount="@integer/list_columns" />
 
-
     <!-- empty list -->
     <TextView
         android:id="@+id/recyclerview_item_empty"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="134dp"
         app:layout_anchor="@+id/recyclerview_forecast"
         app:layout_anchorGravity="fill"
         android:gravity="center_horizontal"
@@ -32,6 +32,16 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:text="@string/empty_list" />
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"
+        android:layout_gravity="bottom">
+    </com.google.android.gms.ads.AdView>
 
 
 </FrameLayout>

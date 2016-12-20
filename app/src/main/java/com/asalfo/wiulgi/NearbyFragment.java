@@ -48,23 +48,17 @@ public class NearbyFragment extends BaseFragment {
     }
 
 
-    public static NearbyFragment newInstance() {
+    public static NearbyFragment newInstance(String title) {
         if(!ProfileManager.getInstance().isLoggedIn())
             return null;
         NearbyFragment fragment = new NearbyFragment();
         Bundle args = new Bundle();
-
+        args.putString(BaseFragment.ACTIVITY_TITLE,title);
         fragment.setArguments(args);
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
 
-        }
-    }
 
 
     @Override
@@ -109,6 +103,7 @@ public class NearbyFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(ITEM_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
+        sendScreenNameToGAnalytics();
     }
 
 

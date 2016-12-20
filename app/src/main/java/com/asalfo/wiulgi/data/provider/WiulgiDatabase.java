@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class WiulgiDatabase  extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "wiulgi.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
 
     public WiulgiDatabase(Context context){

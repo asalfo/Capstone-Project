@@ -4,16 +4,67 @@ package com.asalfo.wiulgi;
 
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.util.Log;
 
 import com.asalfo.wiulgi.data.model.Item;
 import com.asalfo.wiulgi.ui.ItemAdapter;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
+import static com.google.android.gms.internal.zzs.TAG;
 
 
-public abstract class BaseFragment extends Fragment  implements LoaderManager.LoaderCallbacks<Cursor>{
+public abstract class BaseFragment extends Fragment  implements
+        LoaderManager.LoaderCallbacks<Cursor> {
 
 
+    private String mTitle;
+
+    public final static String ACTIVITY_TITLE = "activity_title";
+
+    /**
+     * The {@link Tracker} used to record screen views.
+     */
+    private Tracker mTracker;
+
+
+
+    public String getTitle(){
+        return mTitle;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+          mTitle = getArguments().getString(ACTIVITY_TITLE);
+        }
+
+        // Obtain the shared Tracker instance.
+        WApplication application = (WApplication) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
+    }
+
+
+
+    public Tracker getTracker(){
+        return mTracker;
+    }
+
+    public void sendScreenNameToGAnalytics(String title){
+        mTracker.setScreenName(title);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    public void sendScreenNameToGAnalytics() {
+        mTracker.setScreenName(getTitle());
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
 
 
     /**

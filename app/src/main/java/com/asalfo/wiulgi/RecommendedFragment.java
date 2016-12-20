@@ -48,23 +48,16 @@ public class RecommendedFragment extends BaseFragment {
     }
 
 
-    public static RecommendedFragment newInstance() {
+    public static RecommendedFragment newInstance(String title) {
         if(!ProfileManager.getInstance().isLoggedIn())
             return null;
         RecommendedFragment fragment = new RecommendedFragment();
         Bundle args = new Bundle();
-
+        args.putString(BaseFragment.ACTIVITY_TITLE,title);
         fragment.setArguments(args);
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-    }
 
 
     @Override
@@ -109,6 +102,7 @@ public class RecommendedFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(ITEM_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
+        sendScreenNameToGAnalytics();
     }
 
 

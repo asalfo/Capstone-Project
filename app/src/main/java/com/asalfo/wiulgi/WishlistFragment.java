@@ -52,13 +52,13 @@ public class WishlistFragment extends BaseFragment {
     }
 
 
-    public static WishlistFragment newInstance() {
+    public static WishlistFragment newInstance(String title) {
 
         if(!ProfileManager.getInstance().isLoggedIn())
             return null;
         WishlistFragment fragment = new WishlistFragment();
         Bundle args = new Bundle();
-
+        args.putString(BaseFragment.ACTIVITY_TITLE,title);
         fragment.setArguments(args);
         return fragment;
     }
@@ -114,6 +114,7 @@ public class WishlistFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(ITEM_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
+        sendScreenNameToGAnalytics();
     }
 
 

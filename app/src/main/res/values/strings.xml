@@ -133,4 +133,7 @@
     <string name="currency">%1$s$</string>
 
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="profile_activity_title">Your Profile</string>
+    <string name="sign_in_activity_title">Sign In</string>
+    <string name="sing_up_activity_title">Sign Up</string>
 </resources>

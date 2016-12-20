@@ -152,11 +152,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     @Override
     public int getItemViewType(int position)
     {
-        if(position <=3 )
+        return  VIEW_TYPE_ITEM;
+
+       /* if(position <=3 )
             return  VIEW_TYPE_ITEM;
 
-        return (position % 4 == 0 && mAllowPub) ? VIEW_TYPE_AD : VIEW_TYPE_ITEM;
+        return (position % 4 == 0 && mAllowPub) ? VIEW_TYPE_AD : VIEW_TYPE_ITEM;*/
     }
+
     @Override
     public int getItemCount() {
         if ( null == mCursor ) return 0;

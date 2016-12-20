@@ -243,6 +243,8 @@ public class ItemDetailActivityFragment extends BaseFragment  implements
             });
 
             mListener.onFragmentInteraction(mItem);
+            sendScreenNameToGAnalytics(mItemTitle);
+
         }
 
     }
@@ -317,6 +319,5 @@ public class ItemDetailActivityFragment extends BaseFragment  implements
             e.printStackTrace();
         }
     }
-
 
 }

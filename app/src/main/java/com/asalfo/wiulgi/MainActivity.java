@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements
         mNavigationView.setNavigationItemSelectedListener(this);
 
         if(mCurrentFragment == null){
-            mCurrentFragment = HottestFragment.newInstance();
+            mCurrentFragment = HottestFragment.newInstance(getTitle().toString());
         }
 
         getSupportFragmentManager().beginTransaction()
@@ -224,17 +224,17 @@ public class MainActivity extends AppCompatActivity implements
 
         if (id == R.id.nav_for_you) {
             setTitle(R.string.for_you_title);
-            mCurrentFragment = RecommendedFragment.newInstance();
+            mCurrentFragment = RecommendedFragment.newInstance(getTitle().toString());
         } else if (id == R.id.nav_wishlist) {
             setTitle(R.string.my_wishlist_title);
-            mCurrentFragment= WishlistFragment.newInstance();
+            mCurrentFragment= WishlistFragment.newInstance(getTitle().toString());
         } else if (id == R.id.nav_nearby) {
             setTitle(R.string.nearby_title);
-            mCurrentFragment = NearbyFragment.newInstance();
+            mCurrentFragment = NearbyFragment.newInstance(getTitle().toString());
 
         } else if (id == R.id.nav_hottest) {
             setTitle(R.string.hottest_title);
-            mCurrentFragment = HottestFragment.newInstance();
+            mCurrentFragment = HottestFragment.newInstance(getTitle().toString());
         } else if (id == R.id.nav_setting) {
 
         } else if (id == R.id.nav_sign_in) {

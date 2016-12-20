@@ -26,6 +26,8 @@ import com.asalfo.wiulgi.event.UserEvent;
 import com.asalfo.wiulgi.http.WiulgiApi;
 import com.asalfo.wiulgi.util.Constants;
 import com.asalfo.wiulgi.util.Utils;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 
 import org.greenrobot.eventbus.EventBus;
@@ -58,6 +60,7 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
     private String mEmailAddress;
     private String mPassword;
     private MaterialDialog mProgess;
+    private Tracker mTracker;
 
 
     @Override
@@ -72,6 +75,12 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
 
         initData();
         initUI();
+
+        // Obtain the shared Tracker instance.
+        WApplication application = (WApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+        mTracker.setScreenName(getString(R.string.sign_in_activity_title));
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
     }
 
