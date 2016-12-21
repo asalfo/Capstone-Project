@@ -5,22 +5,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.asalfo.wiulgi.R;
-
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
 
-public class WelcomeFragment  extends Fragment {
+public class WelcomeFragment extends Fragment {
 
 
     @Nullable
@@ -35,7 +31,6 @@ public class WelcomeFragment  extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,7 +42,7 @@ public class WelcomeFragment  extends Fragment {
         mSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(new Intent(getContext(), SignUpActivity.class),MainActivity.REQUEST_SIGNUP);
+                startActivityForResult(new Intent(getContext(), SignUpActivity.class), MainActivity.REQUEST_SIGNUP);
             }
         });
 
@@ -55,7 +50,7 @@ public class WelcomeFragment  extends Fragment {
         mSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(new Intent(getContext(), SignInActivity.class),MainActivity.REQUEST_SIGNIN);
+                startActivityForResult(new Intent(getContext(), SignInActivity.class), MainActivity.REQUEST_SIGNIN);
             }
         });
         return view;
@@ -65,7 +60,7 @@ public class WelcomeFragment  extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK) {
             Intent intent = getActivity().getIntent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             getActivity().finish();

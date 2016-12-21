@@ -1,57 +1,38 @@
 package com.asalfo.wiulgi;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.TypedArray;
 import android.database.Cursor;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.TextView;
-
 
 import com.asalfo.wiulgi.data.provider.ItemLoader;
 import com.asalfo.wiulgi.data.provider.WiulgiContract;
-import com.asalfo.wiulgi.service.UtilityService;
 import com.asalfo.wiulgi.sync.WiulgiSyncAdapter;
 import com.asalfo.wiulgi.ui.ItemAdapter;
-import com.asalfo.wiulgi.ui.RecyclerViewItemClickListener;
 import com.asalfo.wiulgi.ui.WiugliRecyclerView;
 import com.asalfo.wiulgi.util.Utils;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.maps.model.LatLng;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.google.android.gms.internal.zzs.TAG;
-
 
 public class HottestFragment extends BaseFragment {
 
 
+    private static final int ITEM_LOADER = 0;
     @Nullable
     @BindView(R.id.recycler_view)
     WiugliRecyclerView mRecyclerView;
@@ -65,12 +46,9 @@ public class HottestFragment extends BaseFragment {
     private ItemAdapter mAdapter;
     @Nullable
     private OnFragmentInteractionListener mListener;
-
-
     private String mTitle;
     private boolean mItemClicked;
     private LatLng mLatestLocation;
-    private static final int ITEM_LOADER = 0;
 
 
     public HottestFragment() {
@@ -82,12 +60,10 @@ public class HottestFragment extends BaseFragment {
     public static HottestFragment newInstance(String title) {
         HottestFragment fragment = new HottestFragment();
         Bundle args = new Bundle();
-        args.putString(BaseFragment.ACTIVITY_TITLE,title);
+        args.putString(BaseFragment.ACTIVITY_TITLE, title);
         fragment.setArguments(args);
         return fragment;
     }
-
-
 
 
     @Override
@@ -125,9 +101,9 @@ public class HottestFragment extends BaseFragment {
             mAdapter = new ItemAdapter(getActivity(), new ItemAdapter.ItemAdapterOnClickHandler() {
                 @Override
                 public void onClick(Long itemId, ItemAdapter.ViewHolder vh) {
-                    onItemSelected(itemId,vh);
+                    onItemSelected(itemId, vh);
                 }
-            },mEmptyView);
+            }, mEmptyView);
    /*         mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getActivity(),
                     new RecyclerViewItemClickListener.OnItemClickListener() {
                         @Override
@@ -140,7 +116,7 @@ public class HottestFragment extends BaseFragment {
         }
 
 
-       return view;
+        return view;
     }
 
 
@@ -184,16 +160,14 @@ public class HottestFragment extends BaseFragment {
     }
 
 
-
-
     /*
             Updates the empty list view with contextually relevant information that the user can
             use to determine why they aren't seeing weather.
          */
     private void updateEmptyView() {
-        if ( mAdapter.getItemCount() == 0 ) {
+        if (mAdapter.getItemCount() == 0) {
 
-            if ( null != mEmptyView ) {
+            if (null != mEmptyView) {
                 // if cursor is empty, why? do we have an invalid location
                 int message = R.string.empty_list;
                 @WiulgiSyncAdapter.LocationStatus int location = Utils.getLocationStatus(getActivity());
@@ -226,7 +200,7 @@ public class HottestFragment extends BaseFragment {
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-            mAdapter.swapCursor(data);
+        mAdapter.swapCursor(data);
     }
 
     @Override
@@ -234,13 +208,13 @@ public class HottestFragment extends BaseFragment {
         mAdapter.swapCursor(null);
     }
 
-    public void onItemSelected(long itemId,ItemAdapter.ViewHolder vh) {
+    public void onItemSelected(long itemId, ItemAdapter.ViewHolder vh) {
 
 
         if (!mItemClicked) {
             mItemClicked = true;
             Uri contentUri = WiulgiContract.Items.buildItemUri(itemId);
-            mListener.onFragmentInteraction(contentUri,ItemDetailActivity.class,vh);
+            mListener.onFragmentInteraction(contentUri, ItemDetailActivity.class, vh);
         }
     }
 

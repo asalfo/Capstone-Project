@@ -2,7 +2,6 @@ package com.asalfo.wiulgi;
 
 
 import android.content.ContentProviderOperation;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,27 +10,24 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.EditText;
 
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.asalfo.wiulgi.auth.ProfileManager;
-import com.asalfo.wiulgi.data.provider.WiulgiContract;
-import com.asalfo.wiulgi.service.UtilityService;
-import com.asalfo.wiulgi.util.Settings;
 import com.asalfo.wiulgi.auth.User;
+import com.asalfo.wiulgi.data.provider.WiulgiContract;
 import com.asalfo.wiulgi.event.MessageEvent;
 import com.asalfo.wiulgi.event.UserEvent;
 import com.asalfo.wiulgi.http.WiulgiApi;
+import com.asalfo.wiulgi.service.UtilityService;
 import com.asalfo.wiulgi.util.Constants;
+import com.asalfo.wiulgi.util.Settings;
 import com.asalfo.wiulgi.util.Utils;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -46,7 +42,7 @@ import butterknife.OnClick;
 import retrofit2.Response;
 
 
-public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnApiResponseListener{
+public class SignInActivity extends AppCompatActivity implements WiulgiApi.OnApiResponseListener {
 
     WiulgiApi mApi;
 
@@ -72,7 +68,7 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mApi = new WiulgiApi(this,this);
+        mApi = new WiulgiApi(this, this);
         mContext = this;
 
         setContentView(R.layout.activity_login);
@@ -97,8 +93,6 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
     public Intent getParentActivityIntent() {
         return new Intent(this, MainActivity.class);
     }
-
-
 
 
     private void initData() {
@@ -145,7 +139,7 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
     }
 
     @OnClick(R.id.link_sign_up)
-    public void onClickSignUp(){
+    public void onClickSignUp() {
         startActivityForResult(new Intent(this, SignUpActivity.class), 14);
     }
 
@@ -155,7 +149,7 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
         Boolean error = false;
         String email = this.mEmailAddressEditText.getText().toString();
 
-        if ( TextUtils.isEmpty(email) || !email.matches(".+?@.+?\\..+?")) {
+        if (TextUtils.isEmpty(email) || !email.matches(".+?@.+?\\..+?")) {
             error = true;
         }
 
@@ -165,18 +159,17 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
         }
 
         if (error) {
-            EventBus.getDefault().post( new MessageEvent(getString(R.string.wrong_credentials)));
+            EventBus.getDefault().post(new MessageEvent(getString(R.string.wrong_credentials)));
             return;
         }
         User user = new User();
         user.setEmail(email);
         user.setPlainPassword(password);
         this.mApi.signIn(user);
-        if(mProgess != null)
-             mProgess.show();
+        if (mProgess != null)
+            mProgess.show();
 
     }
-
 
 
     @Override
@@ -192,15 +185,15 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(@NonNull MessageEvent event){
+    public void onMessageEvent(@NonNull MessageEvent event) {
 
-        if(event.getType() != Constants.ONLY_MESSAGE)
+        if (event.getType() != Constants.ONLY_MESSAGE)
             return;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
             public void onClick(@NonNull DialogInterface dialog, int id) {
-               dialog.cancel();
+                dialog.cancel();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -215,14 +208,14 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onUserEvent(UserEvent event){
+    public void onUserEvent(UserEvent event) {
 
     }
 
 
     @Override
     public void onApiRequestFailure(int statusCode, String message) {
-        if(mProgess.isShowing()) {
+        if (mProgess.isShowing()) {
             mProgess.dismiss();
         }
         new MaterialDialog.Builder(this)
@@ -244,7 +237,7 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
 
     @Override
     public void onApiRequestSuccess(int i, @NonNull Response response) {
-        if(mProgess.isShowing()) {
+        if (mProgess.isShowing()) {
             mProgess.dismiss();
         }
 
@@ -266,14 +259,13 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
     }
 
 
-
-    private void updateItems(@NonNull User user){
+    private void updateItems(@NonNull User user) {
 
         ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
 
-        Utils.getItemsContentVals(batchOperations,user.getLikedItems(), WiulgiContract.Items.FAVORITED,"1");
-        Utils.getItemsContentVals(batchOperations,user.getWishlistItems(), WiulgiContract.Items.WISHED,"1");
-        Utils.getItemsContentVals(batchOperations,user.getRecommendedItems(), WiulgiContract.Items.RECOMMENDED,"1");
+        Utils.getItemsContentVals(batchOperations, user.getLikedItems(), WiulgiContract.Items.FAVORITED, "1");
+        Utils.getItemsContentVals(batchOperations, user.getWishlistItems(), WiulgiContract.Items.WISHED, "1");
+        Utils.getItemsContentVals(batchOperations, user.getRecommendedItems(), WiulgiContract.Items.RECOMMENDED, "1");
         try {
             getContentResolver().applyBatch(WiulgiContract.CONTENT_AUTHORITY, batchOperations);
         } catch (RemoteException e) {

@@ -7,6 +7,7 @@
 
     tools:context="com.asalfo.wiulgi.HottestFragment"
     android:paddingTop="56dp">
+
     <com.asalfo.wiulgi.ui.WiugliRecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
@@ -38,8 +39,7 @@
         android:layout_height="wrap_content"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id"
-        android:layout_gravity="bottom">
-    </com.google.android.gms.ads.AdView>
+        android:layout_gravity="bottom"></com.google.android.gms.ads.AdView>
 
 
 </FrameLayout>

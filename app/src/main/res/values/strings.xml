@@ -167,7 +167,6 @@
     <string name="pref_header_data_sync">Data &amp; sync</string>
 
 
-
     <string-array name="list_preference_entries">
         <item>Entry 1</item>
         <item>Entry 2</item>
@@ -208,6 +207,8 @@
     <string name="pref_title_sync_frequency">Sync Recommendations Frequency</string>
     <string name="pref_sync_frequency_key" translatable="false">sync_frequency</string>
     <string name="vote_average_desc">Vote average</string>
+    <string name="error_updating_profile">Sorry your can\'t be updated.</string>
+    <string name="profile_updated">Profile updated successfully.</string>
     <string-array name="pref_sync_frequency_titles">
         <item>1 hour</item>
         <item>3 hours</item>

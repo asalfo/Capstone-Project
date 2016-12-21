@@ -33,23 +33,10 @@ public class WiulgiApi {
     private final OnApiResponseListener mListener;
 
 
-    public interface OnApiResponseListener {
-        void onApiRequestFailure(int statusCode, String message);
-
-        void onApiRequestFinish();
-
-        void onApiRequestStart();
-
-        void onApiRequestSuccess(int i, Response response);
-    }
-
-
     public WiulgiApi(Context mContext, OnApiResponseListener mListener) {
         this.mContext = mContext;
         this.mListener = mListener;
     }
-
-
 
     public void signIn(@NonNull User user){
         ApiInterface apiEndPoint =
@@ -73,7 +60,6 @@ public class WiulgiApi {
             }
         });
     }
-
 
     public void createUser(User user){
 
@@ -101,7 +87,6 @@ public class WiulgiApi {
         });
 
     }
-
 
     public void updateUser(@NonNull User user){
 
@@ -133,7 +118,6 @@ public class WiulgiApi {
 
     }
 
-
     public void addToWhislist(@NonNull Item item, String action) {
 
         String token = "Bearer "+ Settings.getInstance().getUserApiToken();
@@ -162,8 +146,6 @@ public class WiulgiApi {
 
         }
     }
-
-
 
     public void like(@NonNull Item item, String action) {
 
@@ -223,7 +205,6 @@ public class WiulgiApi {
         }
     }
 
-
     public void getRecommendations() {
 
         String token = "Bearer "+ Settings.getInstance().getUserApiToken();
@@ -251,5 +232,16 @@ public class WiulgiApi {
             });
 
         }
+    }
+
+
+    public interface OnApiResponseListener {
+        void onApiRequestFailure(int statusCode, String message);
+
+        void onApiRequestFinish();
+
+        void onApiRequestStart();
+
+        void onApiRequestSuccess(int i, Response response);
     }
 }

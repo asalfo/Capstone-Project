@@ -37,9 +37,9 @@ public class WidgetIntentService extends IntentService {
         Cursor data = getContentResolver().query(WiulgiContract.Items.buildDirUri(),
                 new String[]{WiulgiContract.Items._ID, WiulgiContract.Items.THUMBNAIL,
                         WiulgiContract.Items.TITLE, WiulgiContract.Items.PRICE},
-                WiulgiContract.Items.VOTE_AVERAGE + " >= ? ",
-                new String[]{"3.5"},
-                null);
+                null,
+                null,
+                WiulgiContract.Items.VOTE_AVERAGE+" DESC");
         if (data == null) {
             return;
         }

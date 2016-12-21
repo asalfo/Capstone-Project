@@ -11,37 +11,13 @@ import com.asalfo.wiulgi.data.model.Model;
 
 public class Settings {
 
+    @NonNull
+    private static Settings instance = new Settings();
     private final Context mContext;
     @NonNull
     private final SettingsObject mSettings;
 
 
-    private static class SettingsHolder {
-        private static final Settings instance = new Settings();
-    }
-
-
-
-    private class SettingsObject extends Model {
-        private String requestMessage;
-        private String userApiToken;
-        private String userAuthToken;
-        private String userEmail;
-        private Long userId;
-        private Boolean firstSync;
-
-        private SettingsObject() {
-        }
-    }
-
-
-    @NonNull
-    private static Settings instance = new Settings();
-
-    @NonNull
-    public static Settings getInstance() {
-        return instance;
-    }
 
     private Settings() {
 
@@ -54,7 +30,10 @@ public class Settings {
         }
     }
 
-
+    @NonNull
+    public static Settings getInstance() {
+        return instance;
+    }
 
     private void save() {
         Preferences.putString(this.mContext, "com.asalfo.wiugli.settings", this.mSettings.toString());
@@ -62,6 +41,11 @@ public class Settings {
 
     public String getUserEmail() {
         return this.mSettings.userEmail;
+    }
+
+    public void setUserEmail(String email){
+        this.mSettings.userEmail = email;
+        save();
     }
 
     public Boolean isFirstSync(){ return this.mSettings.firstSync; }
@@ -72,6 +56,11 @@ public class Settings {
 
     public String getUserApiToken() {
         return this.mSettings.userApiToken;
+    }
+
+    public void setUserApiToken(String userApiToken) {
+        this.mSettings.userApiToken = userApiToken;
+        save();
     }
 
     public boolean hasApiToken() {
@@ -86,8 +75,18 @@ public class Settings {
         return this.mSettings.userAuthToken;
     }
 
+    public void setUserAuthToken(String userAuthToken) {
+        this.mSettings.userAuthToken = userAuthToken;
+        save();
+    }
+
     public Long getUserId() {
         return this.mSettings.userId;
+    }
+
+    public void setUserId(Long id) {
+        this.mSettings.userId = id;
+        save();
     }
 
     public boolean hasUserId() {
@@ -98,8 +97,8 @@ public class Settings {
         return this.mSettings.requestMessage;
     }
 
-    public void setUserAuthToken(String userAuthToken) {
-        this.mSettings.userAuthToken = userAuthToken;
+    public void setRequestMessage(String message) {
+        this.mSettings.requestMessage = message;
         save();
     }
 
@@ -107,29 +106,25 @@ public class Settings {
         return this.mSettings.userAuthToken != null;
     }
 
-    public void setUserId(Long id) {
-        this.mSettings.userId = id;
-        save();
-    }
-
-    public void setRequestMessage(String message) {
-        this.mSettings.requestMessage = message;
-        save();
-    }
-
-    public void setUserEmail(String email){
-        this.mSettings.userEmail = email;
-        save();
-    }
-
-    public void setUserApiToken(String userApiToken) {
-        this.mSettings.userApiToken = userApiToken;
-        save();
-    }
-
     public void setFirstSync(Boolean sync){
         this.mSettings.firstSync = sync;
         save();
+    }
+
+    private static class SettingsHolder {
+        private static final Settings instance = new Settings();
+    }
+
+    private class SettingsObject extends Model {
+        private String requestMessage;
+        private String userApiToken;
+        private String userAuthToken;
+        private String userEmail;
+        private Long userId;
+        private Boolean firstSync;
+
+        private SettingsObject() {
+        }
     }
 
 }

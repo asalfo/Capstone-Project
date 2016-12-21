@@ -10,6 +10,9 @@ public class WiulgiContract {
     public static final Uri BASE_URI = Uri.parse("content://com.asalfo.wiugli");
 
 
+    private WiulgiContract() {
+    }
+
     public interface ItemsColumns {
         /** Type: INTEGER PRIMARY KEY AUTOINCREMENT */
         String _ID = "_id";
@@ -70,8 +73,5 @@ public class WiulgiContract {
             return Long.parseLong(itemUri.getPathSegments().get(1));
         }
 
-    }
-
-    private WiulgiContract() {
     }
 }

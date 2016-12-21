@@ -74,27 +74,13 @@ public class ItemHeaderView extends RelativeLayout {
 
     Context mContext;
     private Item mItem;
-
-    /**
-     * Interface definition for a callback to be invoked when  the thumbnail  changes.
-     */
-    public interface OnThumbnailChangedListener {
-        /**
-         * Called when the ItemHeaderView 's thumbnail  url  has been changed.
-         *
-         * @param itemHeaderView the ItemHeaderView which url has changed
-         * @param thumnailUrl    the url of the thumbnail
-         */
-        void onThumbnailChanged(ItemHeaderView itemHeaderView, String thumnailUrl);
-    }
-
     private List<OnThumbnailChangedListener> mListeners;
-
 
     public ItemHeaderView(Context context) {
         super(context);
         mContext = context;
     }
+
 
     public ItemHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -111,7 +97,6 @@ public class ItemHeaderView extends RelativeLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
         mContext = context;
     }
-
 
     @Override
     protected void onFinishInflate() {
@@ -180,7 +165,6 @@ public class ItemHeaderView extends RelativeLayout {
         });
     }
 
-
     public void setItem(@NonNull Item item) {
 
         mItem = item;
@@ -195,7 +179,6 @@ public class ItemHeaderView extends RelativeLayout {
 
         setupAction(item);
     }
-
 
     @Nullable
     public ImageView getItemThumbnail() {
@@ -220,7 +203,6 @@ public class ItemHeaderView extends RelativeLayout {
     public CharSequence getItemName() {
         return mItemName.getText();
     }
-
 
     public void setupAction(@NonNull final Item item) {
 
@@ -284,7 +266,6 @@ public class ItemHeaderView extends RelativeLayout {
         mItemName.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
     }
 
-
     public void applyPalette(@NonNull Palette palette) {
         Palette.Swatch textSwatch = palette.getMutedSwatch();
 
@@ -305,7 +286,6 @@ public class ItemHeaderView extends RelativeLayout {
 
     }
 
-
     /**
      * Add a listener that will be called when the offset of this {@link AppBarLayout} changes.
      *
@@ -320,7 +300,6 @@ public class ItemHeaderView extends RelativeLayout {
         }
     }
 
-
     /**
      * Remove the previously added {@link AppBarLayout.OnOffsetChangedListener}.
      *
@@ -331,7 +310,6 @@ public class ItemHeaderView extends RelativeLayout {
             mListeners.remove(listener);
         }
     }
-
 
     void dispatchThumbnailUrlUpdates(String url) {
         // Iterate backwards through the list so that most recently added listeners
@@ -344,6 +322,20 @@ public class ItemHeaderView extends RelativeLayout {
                 }
             }
         }
+    }
+
+
+    /**
+     * Interface definition for a callback to be invoked when  the thumbnail  changes.
+     */
+    public interface OnThumbnailChangedListener {
+        /**
+         * Called when the ItemHeaderView 's thumbnail  url  has been changed.
+         *
+         * @param itemHeaderView the ItemHeaderView which url has changed
+         * @param thumnailUrl    the url of the thumbnail
+         */
+        void onThumbnailChanged(ItemHeaderView itemHeaderView, String thumnailUrl);
     }
 
 }

@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 public class RecommendedFragment extends BaseFragment {
 
 
-
+    private static final int ITEM_LOADER = 0;
     @Nullable
     @BindView(R.id.recycler_view)
     WiugliRecyclerView mRecyclerView;
@@ -42,11 +42,8 @@ public class RecommendedFragment extends BaseFragment {
     private ItemAdapter mAdapter;
     @Nullable
     private OnFragmentInteractionListener mListener;
-
-
     private boolean mItemClicked;
     private LatLng mLatestLocation;
-    private static final int ITEM_LOADER = 0;
 
 
     public RecommendedFragment() {
@@ -55,15 +52,14 @@ public class RecommendedFragment extends BaseFragment {
 
 
     public static RecommendedFragment newInstance(String title) {
-        if(!ProfileManager.getInstance().isLoggedIn())
+        if (!ProfileManager.getInstance().isLoggedIn())
             return null;
         RecommendedFragment fragment = new RecommendedFragment();
         Bundle args = new Bundle();
-        args.putString(BaseFragment.ACTIVITY_TITLE,title);
+        args.putString(BaseFragment.ACTIVITY_TITLE, title);
         fragment.setArguments(args);
         return fragment;
     }
-
 
 
     @Override
@@ -86,9 +82,9 @@ public class RecommendedFragment extends BaseFragment {
             mAdapter = new ItemAdapter(getActivity(), new ItemAdapter.ItemAdapterOnClickHandler() {
                 @Override
                 public void onClick(Long itemId, ItemAdapter.ViewHolder vh) {
-                    onItemSelected(itemId,vh);
+                    onItemSelected(itemId, vh);
                 }
-            },mEmptyView);
+            }, mEmptyView);
    /*         mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getActivity(),
                     new RecyclerViewItemClickListener.OnItemClickListener() {
                         @Override
@@ -100,7 +96,7 @@ public class RecommendedFragment extends BaseFragment {
             mRecyclerView.setAdapter(mAdapter);
         }
 
-       return view;
+        return view;
     }
 
 
@@ -138,16 +134,14 @@ public class RecommendedFragment extends BaseFragment {
     }
 
 
-
-
     /*
             Updates the empty list view with contextually relevant information that the user can
             use to determine why they aren't seeing weather.
          */
     private void updateEmptyView() {
-        if ( mAdapter.getItemCount() == 0 ) {
+        if (mAdapter.getItemCount() == 0) {
 
-            if ( null != mEmptyView ) {
+            if (null != mEmptyView) {
                 // if cursor is empty, why? do we have an invalid location
                 int message = R.string.empty_list;
                 @WiulgiSyncAdapter.LocationStatus int location = Utils.getLocationStatus(getActivity());
@@ -175,7 +169,7 @@ public class RecommendedFragment extends BaseFragment {
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         ItemLoader loader = ItemLoader.newAllItemsInstance(getActivity());
-     loader.setSelection(WiulgiContract.Items.RECOMMENDED+" = ?");
+        loader.setSelection(WiulgiContract.Items.RECOMMENDED + " = ?");
         loader.setSelectionArgs(new String[]{"1"});
 
         return loader;
@@ -184,7 +178,7 @@ public class RecommendedFragment extends BaseFragment {
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-            mAdapter.swapCursor(data);
+        mAdapter.swapCursor(data);
     }
 
     @Override
@@ -192,16 +186,15 @@ public class RecommendedFragment extends BaseFragment {
         mAdapter.swapCursor(null);
     }
 
-    public void onItemSelected(long itemId,ItemAdapter.ViewHolder vh) {
+    public void onItemSelected(long itemId, ItemAdapter.ViewHolder vh) {
 
 
         if (!mItemClicked) {
             mItemClicked = true;
             Uri contentUri = WiulgiContract.Items.buildItemUri(itemId);
-            mListener.onFragmentInteraction(contentUri,ItemDetailActivity.class,vh);
+            mListener.onFragmentInteraction(contentUri, ItemDetailActivity.class, vh);
         }
     }
-
 
 
 }

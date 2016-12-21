@@ -18,7 +18,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,10 +30,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.asalfo.wiulgi.auth.ProfileManager;
 import com.asalfo.wiulgi.data.model.Item;
-import com.asalfo.wiulgi.util.Settings;
 import com.asalfo.wiulgi.service.UtilityService;
 import com.asalfo.wiulgi.sync.WiulgiSyncAdapter;
 import com.asalfo.wiulgi.ui.ItemAdapter;
+import com.asalfo.wiulgi.util.Settings;
 import com.asalfo.wiulgi.util.Utils;
 
 import butterknife.BindView;
@@ -52,30 +51,16 @@ public class MainActivity extends AppCompatActivity implements
     public static final int REQUEST_SIGNIN = 1;
     public static final int REQUEST_SIGNUP = 2;
     public static final int REQUEST_PROFILE = 1;
+    private static final int PERMISSION_REQ = 0;
     @Nullable
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-
     @Nullable
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @Nullable
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
-
-
-
-    private WelcomeFragment mWelcomeFragment;
-    @Nullable
-    private Fragment mCurrentFragment;
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-
-
-    private static final int PERMISSION_REQ = 0;
-
-
-
     private final ProfileManager.ProfileListener mProfileListener = new ProfileManager.ProfileListener() {
         public void onProfileLogIn() {
 
@@ -94,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements
                     .findViewById(R.id.profile_info);
 
             mUserEmail.setText(ProfileManager.getInstance().getUser().getEmail());
-            String username =ProfileManager.getInstance().getUser().getUsername();
+            String username = ProfileManager.getInstance().getUser().getUsername();
             mUsername.setText(username);
 
             TextDrawable avatar = Utils.createTextDrawable(username);
@@ -119,8 +104,11 @@ public class MainActivity extends AppCompatActivity implements
             profile_info.setVisibility(View.INVISIBLE);
         }
     };
-
-
+    private WelcomeFragment mWelcomeFragment;
+    @Nullable
+    private Fragment mCurrentFragment;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements
         mTitle = mDrawerTitle = getTitle();
 
 
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
@@ -143,9 +130,10 @@ public class MainActivity extends AppCompatActivity implements
 
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        if(getIntent().hasExtra(FRAG)){
+        if (getIntent().hasExtra(FRAG)) {
+            setTitle(R.string.for_you_title);
             mCurrentFragment = RecommendedFragment.newInstance(getTitle().toString());
-        }else{
+        } else {
             mCurrentFragment = HottestFragment.newInstance(getTitle().toString());
         }
 
@@ -155,19 +143,19 @@ public class MainActivity extends AppCompatActivity implements
 
         WiulgiSyncAdapter.initializeSyncAdapter(this);
 
-       if(!Settings.getInstance().hasFirstSync()){
+        if (!Settings.getInstance().hasFirstSync()) {
             WiulgiSyncAdapter.syncImmediately(this);
             Settings.getInstance().setFirstSync(true);
-       }
+        }
 
         setupLocationService(savedInstanceState);
-         if(ProfileManager.getInstance().isLoggedIn()){
-             mNavigationView.getHeaderView(0)
-                     .findViewById(R.id.profile_info).setVisibility(View.VISIBLE);
-         }else{
-             mNavigationView.getHeaderView(0)
-                     .findViewById(R.id.profile_info).setVisibility(View.INVISIBLE);
-         }
+        if (ProfileManager.getInstance().isLoggedIn()) {
+            mNavigationView.getHeaderView(0)
+                    .findViewById(R.id.profile_info).setVisibility(View.VISIBLE);
+        } else {
+            mNavigationView.getHeaderView(0)
+                    .findViewById(R.id.profile_info).setVisibility(View.INVISIBLE);
+        }
 
     }
 
@@ -189,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onResume();
         UtilityService.requestLocation(this);
     }
-
 
 
     @Override
@@ -225,8 +212,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -237,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements
             mCurrentFragment = RecommendedFragment.newInstance(getTitle().toString());
         } else if (id == R.id.nav_wishlist) {
             setTitle(R.string.my_wishlist_title);
-            mCurrentFragment= WishlistFragment.newInstance(getTitle().toString());
+            mCurrentFragment = WishlistFragment.newInstance(getTitle().toString());
         } else if (id == R.id.nav_nearby) {
             setTitle(R.string.nearby_title);
             mCurrentFragment = NearbyFragment.newInstance(getTitle().toString());
@@ -246,13 +231,13 @@ public class MainActivity extends AppCompatActivity implements
             setTitle(R.string.hottest_title);
             mCurrentFragment = HottestFragment.newInstance(getTitle().toString());
         } else if (id == R.id.nav_setting) {
-            startActivity(new Intent(this,SettingsActivity.class));
+            startActivity(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.nav_sign_in) {
             Intent login = new Intent(this, SignInActivity.class);
             startActivityForResult(login, REQUEST_SIGNIN);
         }
 
-        if(mCurrentFragment == null){
+        if (mCurrentFragment == null) {
             mCurrentFragment = new WelcomeFragment();
         }
         getSupportFragmentManager().beginTransaction()
@@ -292,6 +277,7 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Setup the location service
+     *
      * @param savedInstanceState
      */
 
@@ -316,7 +302,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
     /**
      * Run when fine location permission has been granted
      */
@@ -337,6 +322,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
         }
     }
+
     /**
      * Request the fine location permission from the user
      */
@@ -344,6 +330,7 @@ public class MainActivity extends AppCompatActivity implements
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQ);
     }
+
     /**
      * Show a permission explanation snackbar
      */
@@ -363,8 +350,6 @@ public class MainActivity extends AppCompatActivity implements
                 .show();
 
     }
-
-
 
 
 }

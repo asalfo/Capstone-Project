@@ -34,26 +34,20 @@ import com.asalfo.wiulgi.data.provider.WiulgiContract.ItemsColumns;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
-    private final String LOG_TAG = ItemAdapter.class.getSimpleName();
     private static final int VIEW_TYPE_AD = 0;
     private static final int VIEW_TYPE_ITEM = 1;
-    private Context mContext;
     private static Typeface robotoLight;
-    private int mImageSize;
+    private final String LOG_TAG = ItemAdapter.class.getSimpleName();
     final private ItemAdapterOnClickHandler mClickHandler;
-
     final private View mEmptyView;
-
+    private Context mContext;
+    private int mImageSize;
     // Flag to determine if we want AD.
     private boolean mAllowPub = true;
     private Cursor mCursor;
     private LatLng mLatestLocation;
 
 
-
-    public interface ItemAdapterOnClickHandler {
-        void onClick(Long id, ViewHolder vh);
-    }
 
     public ItemAdapter (Context context, ItemAdapterOnClickHandler dh, View emptyView) {
         mContext = context;
@@ -62,7 +56,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         mImageSize = mContext.getResources().getDimensionPixelSize(R.dimen.image_size)
                 * Constants.IMAGE_ANIM_MULTIPLIER;
     }
-
 
     @NonNull
     @Override
@@ -149,8 +142,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     }
 
-
-
     @Override
     public int getItemViewType(int position)
     {
@@ -185,12 +176,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         }
     }
 
-
-
-
+    public interface ItemAdapterOnClickHandler {
+        void onClick(Long id, ViewHolder vh);
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener{
+        @Nullable
+        @BindView(R.id.thumbnail)
+        public ImageView mThumbnail;
         @Nullable
         @BindView(R.id.card_view)
         CardView mCardView;
@@ -203,9 +197,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         @Nullable
         @BindView(R.id.brand)
         TextView mBrandTextView;
-        @Nullable
-        @BindView(R.id.thumbnail)
-        public ImageView mThumbnail;
         @Nullable
         @BindView(R.id.count_average)
         ImageView mVoteImageView;

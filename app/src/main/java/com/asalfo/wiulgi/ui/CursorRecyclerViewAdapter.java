@@ -12,12 +12,12 @@ import com.asalfo.wiulgi.data.provider.WiulgiContract;
 
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH>{
   private static final String LOG_TAG = CursorRecyclerViewAdapter.class.getSimpleName();
+  @NonNull
+  private final DataSetObserver mDataSetObserver;
   @Nullable
   private Cursor mCursor;
   private boolean dataIsValid;
   private int rowIdColumn;
-  @NonNull
-  private final DataSetObserver mDataSetObserver;
   CursorRecyclerViewAdapter(Context context, @Nullable Cursor cursor){
     mCursor = cursor;
     dataIsValid = cursor != null;

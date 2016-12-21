@@ -12,9 +12,7 @@
     tools:context="com.asalfo.wiulgi.ItemDetailActivityFragment">
 
 
-
-    <com.asalfo.wiulgi.ui.WiulgiExpandableTextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.asalfo.wiulgi.ui.WiulgiExpandableTextView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
         android:id="@+id/itemDescription"
         android:layout_width="match_parent"
@@ -30,7 +28,7 @@
             android:layout_margin="0dp"
             android:ellipsize="end"
             android:lineSpacingMultiplier="1.2"
-            style="@style/ItemDescription"/>
+            style="@style/ItemDescription" />
 
         <ImageButton
             android:id="@id/expand_collapse"
@@ -39,71 +37,70 @@
             android:layout_gravity="end|bottom"
             android:background="@android:color/transparent"
             android:padding="5dp"
-            android:contentDescription="@string/read_more"
-            />
+            android:contentDescription="@string/read_more" />
     </com.asalfo.wiulgi.ui.WiulgiExpandableTextView>
 
 
-        <android.support.v7.widget.GridLayout
-            android:id="@+id/infoGrid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/itemDescription"
-            app:columnCount="2"
-            app:rowCount="4"
-            app:useDefaultMargins="true">
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/infoGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/itemDescription"
+        app:columnCount="2"
+        app:rowCount="4"
+        app:useDefaultMargins="true">
 
-            <TextView
-                android:text="@string/brand"
-                app:layout_columnWeight="1"
-                android:textSize="16sp"
-                fontPath="fonts/Roboto-Medium.ttf"
-                tools:ignore="MissingPrefix" />
+        <TextView
+            android:text="@string/brand"
+            app:layout_columnWeight="1"
+            android:textSize="16sp"
+            fontPath="fonts/Roboto-Medium.ttf"
+            tools:ignore="MissingPrefix" />
 
-            <TextView
-                android:id="@+id/itemBrand"
-                app:layout_columnWeight="1"
-                tools:text="Samsung" />
+        <TextView
+            android:id="@+id/itemBrand"
+            app:layout_columnWeight="1"
+            tools:text="Samsung" />
 
-            <TextView
-                android:text="@string/model"
-                app:layout_columnWeight="1"
-                android:textSize="16sp"
-                fontPath="fonts/Roboto-Medium.ttf"
-                tools:ignore="MissingPrefix" />
+        <TextView
+            android:text="@string/model"
+            app:layout_columnWeight="1"
+            android:textSize="16sp"
+            fontPath="fonts/Roboto-Medium.ttf"
+            tools:ignore="MissingPrefix" />
 
-            <TextView
-                android:id="@+id/itemModel"
-                app:layout_columnWeight="1"
-                tools:text="Galaxy S7" />
+        <TextView
+            android:id="@+id/itemModel"
+            app:layout_columnWeight="1"
+            tools:text="Galaxy S7" />
 
-            <TextView
-                android:text="@string/color"
-                app:layout_columnWeight="1"
-                android:textSize="16sp"
-                fontPath="fonts/Roboto-Medium.ttf"
-                tools:ignore="MissingPrefix" />
+        <TextView
+            android:text="@string/color"
+            app:layout_columnWeight="1"
+            android:textSize="16sp"
+            fontPath="fonts/Roboto-Medium.ttf"
+            tools:ignore="MissingPrefix" />
 
-            <TextView
-                android:id="@+id/itemColor"
-                app:layout_columnWeight="1"
-                tools:text="Galaxy S7" />
-
-
-            <TextView
-                android:text="@string/size"
-                app:layout_columnWeight="1"
-                android:textSize="16sp"
-                fontPath="fonts/Roboto-Medium.ttf"
-                tools:ignore="MissingPrefix" />
-
-            <TextView
-                android:id="@+id/itemSize"
-                app:layout_columnWeight="1"
-                tools:text="Galaxy S7" />
+        <TextView
+            android:id="@+id/itemColor"
+            app:layout_columnWeight="1"
+            tools:text="Galaxy S7" />
 
 
-        </android.support.v7.widget.GridLayout>
+        <TextView
+            android:text="@string/size"
+            app:layout_columnWeight="1"
+            android:textSize="16sp"
+            fontPath="fonts/Roboto-Medium.ttf"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:id="@+id/itemSize"
+            app:layout_columnWeight="1"
+            tools:text="Galaxy S7" />
+
+
+    </android.support.v7.widget.GridLayout>
 
 
     <RatingBar
@@ -117,7 +114,7 @@
         android:scaleY="0.7"
         android:stepSize="0.5"
         android:isIndicator="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/map_container"
@@ -125,13 +122,13 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_margin="8dp">
+
         <fragment
             android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:name="com.google.android.gms.maps.SupportMapFragment"/>
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
     </android.support.v7.widget.CardView>
-
 
 
 </RelativeLayout>

@@ -20,6 +20,19 @@ import java.util.Date;
 public abstract class Model {
     private static final String[] DATE_FORMATS = new String[]{"yyyy-MM-dd'T'HH:mm:ss'Z'", "yyyy-MM-dd'T'HH:mm:ssZ", "yyyy-MM-dd"};
 
+    public static <T> Object fromString(String objectString, @NonNull Class<T> classType) {
+        if (TextUtils.isEmpty(objectString)) {
+            return null;
+        }
+        return new GsonBuilder().registerTypeAdapter(Date.class, new DateSerializer()).create().fromJson(objectString, classType);
+    }
+
+    public String toString() {
+        String json = new Gson().toJson(this);
+        Log.d("Model",json);
+        return new Gson().toJson(this);
+    }
+
     private static class DateSerializer implements JsonDeserializer<Date> {
         private DateSerializer() {
         }
@@ -37,18 +50,5 @@ public abstract class Model {
             }
             return null;
         }
-    }
-
-    public String toString() {
-        String json = new Gson().toJson(this);
-        Log.d("Model",json);
-        return new Gson().toJson(this);
-    }
-
-    public static <T> Object fromString(String objectString, @NonNull Class<T> classType) {
-        if (TextUtils.isEmpty(objectString)) {
-            return null;
-        }
-        return new GsonBuilder().registerTypeAdapter(Date.class, new DateSerializer()).create().fromJson(objectString, classType);
     }
 }

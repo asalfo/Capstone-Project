@@ -17,23 +17,6 @@ public class ProfileManager {
     @Nullable
     private User mUser;
 
-    public interface ProfileListener {
-        void onProfileLogIn();
-
-        void onProfileLogOut();
-    }
-
-
-
-    private static class ProfileManagerHolder {
-        private static final ProfileManager instance = new ProfileManager();
-    }
-
-    @NonNull
-    public static ProfileManager getInstance() {
-        return ProfileManagerHolder.instance;
-    }
-
     private ProfileManager() {
         if (this.mListeners == null) {
             synchronized (ProfileManager.class) {
@@ -42,6 +25,11 @@ public class ProfileManager {
                 }
             }
         }
+    }
+
+    @NonNull
+    public static ProfileManager getInstance() {
+        return ProfileManagerHolder.instance;
     }
 
     public void init(@NonNull Context context) {
@@ -94,16 +82,16 @@ public class ProfileManager {
         }
     }
 
+    @Nullable
+    public User getUser() {
+        return this.mUser;
+    }
+
     public void setUser(User user) {
         synchronized (ProfileManager.class) {
             this.mUser = user;
             save();
         }
-    }
-
-    @Nullable
-    public User getUser() {
-        return this.mUser;
     }
 
     public void logIn(@NonNull User user) {
@@ -116,8 +104,6 @@ public class ProfileManager {
             ProfileManager.this.dispatchOnProfileLogIn();
 
     }
-
-
 
     public void logOut() {
         synchronized (ProfileManager.class) {
@@ -139,7 +125,6 @@ public class ProfileManager {
         this.mSharedPreferences.edit().remove("user").apply();
     }
 
-
     private void dispatchOnProfileLogIn() {
         synchronized (ProfileManager.class) {
             for (ProfileListener listener : this.mListeners) {
@@ -154,5 +139,16 @@ public class ProfileManager {
                 listener.onProfileLogOut();
             }
         }
+    }
+
+
+    public interface ProfileListener {
+        void onProfileLogIn();
+
+        void onProfileLogOut();
+    }
+
+    private static class ProfileManagerHolder {
+        private static final ProfileManager instance = new ProfileManager();
     }
 }

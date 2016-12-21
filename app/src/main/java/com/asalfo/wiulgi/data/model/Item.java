@@ -13,6 +13,18 @@ import com.asalfo.wiulgi.data.provider.WiulgiContract.ItemsColumns;
 public class Item  extends Model implements Parcelable {
 
 
+    public static final Parcelable.Creator<Item> CREATOR
+            = new Parcelable.Creator<Item>() {
+        @NonNull
+        public Item createFromParcel(@NonNull Parcel in) {
+            return new Item(in);
+        }
+
+        @NonNull
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
     private String mId;
     @SerializedName("id")
     private String mMongoId;
@@ -44,9 +56,9 @@ public class Item  extends Model implements Parcelable {
     private  boolean mRecommended;
     private  boolean mWished;
 
-
-
     public Item(){}
+
+
 
     public Item(String id, String title, String slug, String description,
                 String color, String brand, String model, String size,
@@ -63,6 +75,7 @@ public class Item  extends Model implements Parcelable {
         this.mPrice = price;
         this.mThumbnail = thumbnail;
     }
+
 
 
 
@@ -93,22 +106,6 @@ public class Item  extends Model implements Parcelable {
         mRecommended = cursor.getInt(cursor.getColumnIndex(ItemsColumns.RECOMMENDED)) > 0;
         mWished = cursor.getInt(cursor.getColumnIndex(ItemsColumns.WISHED)) > 0;
     }
-
-
-
-
-    public static final Parcelable.Creator<Item> CREATOR
-            = new Parcelable.Creator<Item>() {
-        @NonNull
-        public Item createFromParcel(@NonNull Parcel in) {
-            return new Item(in);
-        }
-
-        @NonNull
-        public Item[] newArray(int size) {
-            return new Item[size];
-        }
-    };
 
     private Item(@NonNull Parcel in) {
 
@@ -260,19 +257,17 @@ public class Item  extends Model implements Parcelable {
         return mVoteCount;
     }
 
-    public void setVoteCount(int voteCount) {
-        this.mVoteCount = voteCount;
-    }
-
-
-    public boolean getFavorited() {
-        return mFavorited;
-    }
-
     public void setVoteCount(boolean favorited) {
         this.mFavorited = favorited;
     }
 
+    public void setVoteCount(int voteCount) {
+        this.mVoteCount = voteCount;
+    }
+
+    public boolean getFavorited() {
+        return mFavorited;
+    }
 
     public boolean getRecommended() {
         return mRecommended;

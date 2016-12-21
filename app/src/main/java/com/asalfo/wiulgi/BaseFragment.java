@@ -1,41 +1,34 @@
 package com.asalfo.wiulgi;
 
 
-
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.util.Log;
 
 import com.asalfo.wiulgi.data.model.Item;
 import com.asalfo.wiulgi.ui.ItemAdapter;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import static com.google.android.gms.internal.zzs.TAG;
 
-
-public abstract class BaseFragment extends Fragment  implements
+public abstract class BaseFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
 
+    public final static String ACTIVITY_TITLE = "activity_title";
     @Nullable
     private String mTitle;
-
-    public final static String ACTIVITY_TITLE = "activity_title";
-
     /**
      * The {@link Tracker} used to record screen views.
      */
     private Tracker mTracker;
 
 
-
     @Nullable
-    public String getTitle(){
+    public String getTitle() {
         return mTitle;
     }
 
@@ -44,7 +37,7 @@ public abstract class BaseFragment extends Fragment  implements
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-          mTitle = getArguments().getString(ACTIVITY_TITLE);
+            mTitle = getArguments().getString(ACTIVITY_TITLE);
         }
 
         // Obtain the shared Tracker instance.
@@ -53,12 +46,11 @@ public abstract class BaseFragment extends Fragment  implements
     }
 
 
-
-    public Tracker getTracker(){
+    public Tracker getTracker() {
         return mTracker;
     }
 
-    public void sendScreenNameToGAnalytics(String title){
+    public void sendScreenNameToGAnalytics(String title) {
         mTracker.setScreenName(title);
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
@@ -82,6 +74,7 @@ public abstract class BaseFragment extends Fragment  implements
     public interface OnFragmentInteractionListener {
 
         void onFragmentInteraction(Uri uri, Class<?> cls, ItemAdapter.ViewHolder vh);
+
         void onFragmentInteraction(Item item);
     }
 }

@@ -56,11 +56,14 @@ public class UtilityService extends IntentService {
     private static final String ACTION_RECOMMENDATIONS = "request_recommendations";
 
 
+    public UtilityService() {
+        super(TAG);
+    }
+
     @NonNull
     public static IntentFilter getLocationUpdatedIntentFilter() {
         return new IntentFilter(UtilityService.ACTION_LOCATION_UPDATED);
     }
-
 
     public static void requestLocation(@NonNull Context context) {
         Intent intent = new Intent(context, UtilityService.class);
@@ -68,17 +71,11 @@ public class UtilityService extends IntentService {
         context.startService(intent);
     }
 
-
     public static void requestRecommendation(@NonNull Context context) {
         Intent intent = new Intent(context, UtilityService.class);
         intent.putExtra(Constants.TAG, Constants.INIT);
         intent.setAction(UtilityService.ACTION_RECOMMENDATIONS);
         context.startService(intent);
-    }
-
-
-    public UtilityService() {
-        super(TAG);
     }
 
     @Override

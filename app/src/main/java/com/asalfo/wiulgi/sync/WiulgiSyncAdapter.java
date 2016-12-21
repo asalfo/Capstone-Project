@@ -39,105 +39,22 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
-    public final String LOG_TAG = WiulgiSyncAdapter.class.getSimpleName();
     // Interval at which to sync with the weather, in seconds.
     // 60 seconds (1 minute) * 180 = 3 hours
     public static final int SYNC_INTERVAL = 60 * 180;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
-
-
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({STATUS_OK, STATUS_SERVER_DOWN, STATUS_SERVER_INVALID, STATUS_UNKNOWN, STATUS_INVALID})
-    public @interface LocationStatus {}
-
     public static final int STATUS_OK = 0;
     public static final int STATUS_SERVER_DOWN = 1;
     public static final int STATUS_SERVER_INVALID = 2;
     public static final int STATUS_UNKNOWN = 3;
     public static final int STATUS_INVALID = 4;
-
+    public final String LOG_TAG = WiulgiSyncAdapter.class.getSimpleName();
     private Context mContext ;
 
     public WiulgiSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         mContext = context;
     }
-
-    @Override
-    public void onPerformSync(Account account, @NonNull Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        Log.d(LOG_TAG, "Starting sync");
-
-        ApiInterface api = ApiServiceGenerator.createService(ApiInterface.class, null, null);
-
-        String filter = extras.getString(ApiInterface.SELECTION);
-        int page = extras.getInt(ApiInterface.PAGE, 1);
-
-        Call<WiugliCollection<Item>> call = api.itemList(filter, page, BuildConfig.WIULGI_API_KEY);
-
-        try {
-            Response<WiugliCollection<Item>> response = call.execute();
-
-            switch (response.code()){
-                case 200:
-                    WiugliCollection<Item> collection = response.body();
-                    setLocationStatus(getContext(), STATUS_OK);
-                    break;
-                case 401:
-                    setLocationStatus(getContext(), STATUS_SERVER_INVALID);
-                    return;
-                case 404:
-                    setLocationStatus(getContext(), STATUS_SERVER_INVALID);
-                    return;
-
-                case  500:
-                    setLocationStatus(getContext(), STATUS_SERVER_DOWN);
-                    return;
-
-                case  503:
-                    setLocationStatus(getContext(), STATUS_SERVER_DOWN);
-                    return;
-                default:
-                    setLocationStatus(getContext(), STATUS_INVALID);
-                    return;
-            }
-
-
-            try {
-                ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
-                Uri dirUri = WiulgiContract.Items.buildDirUri();
-                String selection = WiulgiContract.Items.WISHED+ "= ? AND "
-                        + WiulgiContract.Items.FAVORITED+ "= ? AND "
-                        + WiulgiContract.Items.RECOMMENDED+ "= ? " ;
-
-                String [] selectionArgs =  new String[]{"0","0","0"};
-
-                // Delete items
-                batchOperations.add(ContentProviderOperation.newDelete(dirUri).
-                        withSelection (selection,selectionArgs).build());
-
-
-              Utils.itemListToContentVals(batchOperations,response.body().getItems());
-                mContext.getContentResolver().applyBatch(WiulgiContract.CONTENT_AUTHORITY, batchOperations);
-
-
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                Log.e(LOG_TAG, "Error applying batch insert", e);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            } catch (OperationApplicationException e) {
-                e.printStackTrace();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return;
-    }
-
-
-
 
     /**
      * Helper method to schedule the sync adapter periodic execution
@@ -230,7 +147,6 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
         getSyncAccount(context);
     }
 
-
     /**
      * Sets the server status into shared preference.  This function should not be called from
      * the UI thread because it uses commit to write to the shared preferences.
@@ -243,4 +159,82 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
         spe.putInt(c.getString(R.string.pref_server_status_key), locationStatus);
         spe.apply();
     }
+
+    @Override
+    public void onPerformSync(Account account, @NonNull Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
+        Log.d(LOG_TAG, "Starting sync");
+
+        ApiInterface api = ApiServiceGenerator.createService(ApiInterface.class, null, null);
+
+        String filter = extras.getString(ApiInterface.SELECTION);
+        int page = extras.getInt(ApiInterface.PAGE, 1);
+
+        Call<WiugliCollection<Item>> call = api.itemList(filter, page, BuildConfig.WIULGI_API_KEY);
+
+        try {
+            Response<WiugliCollection<Item>> response = call.execute();
+
+            switch (response.code()){
+                case 200:
+                    WiugliCollection<Item> collection = response.body();
+                    setLocationStatus(getContext(), STATUS_OK);
+                    break;
+                case 401:
+                    setLocationStatus(getContext(), STATUS_SERVER_INVALID);
+                    return;
+                case 404:
+                    setLocationStatus(getContext(), STATUS_SERVER_INVALID);
+                    return;
+
+                case  500:
+                    setLocationStatus(getContext(), STATUS_SERVER_DOWN);
+                    return;
+
+                case  503:
+                    setLocationStatus(getContext(), STATUS_SERVER_DOWN);
+                    return;
+                default:
+                    setLocationStatus(getContext(), STATUS_INVALID);
+                    return;
+            }
+
+
+            try {
+                ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
+                Uri dirUri = WiulgiContract.Items.buildDirUri();
+                String selection = WiulgiContract.Items.WISHED+ "= ? AND "
+                        + WiulgiContract.Items.FAVORITED+ "= ? AND "
+                        + WiulgiContract.Items.RECOMMENDED+ "= ? " ;
+
+                String [] selectionArgs =  new String[]{"0","0","0"};
+
+                // Delete items
+                batchOperations.add(ContentProviderOperation.newDelete(dirUri).
+                        withSelection (selection,selectionArgs).build());
+
+
+              Utils.itemListToContentVals(batchOperations,response.body().getItems());
+                mContext.getContentResolver().applyBatch(WiulgiContract.CONTENT_AUTHORITY, batchOperations);
+
+
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG, "Error applying batch insert", e);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            } catch (OperationApplicationException e) {
+                e.printStackTrace();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return;
+    }
+
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({STATUS_OK, STATUS_SERVER_DOWN, STATUS_SERVER_INVALID, STATUS_UNKNOWN, STATUS_INVALID})
+    public @interface LocationStatus {}
 }

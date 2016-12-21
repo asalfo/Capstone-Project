@@ -9,6 +9,10 @@ import android.support.v4.content.CursorLoader;
 
 public class ItemLoader  extends CursorLoader {
 
+    private ItemLoader(@NonNull Context context, Uri uri) {
+        super(context, uri, Query.PROJECTION, null, null, WiulgiContract.Items.DEFAULT_SORT);
+    }
+
     @NonNull
     public static ItemLoader newAllItemsInstance(@NonNull Context context) {
         return new ItemLoader(context, WiulgiContract.Items.buildDirUri());
@@ -17,10 +21,6 @@ public class ItemLoader  extends CursorLoader {
     @NonNull
     public static ItemLoader newInstanceForItemId(@NonNull Context context, long itemId) {
         return new ItemLoader(context, WiulgiContract.Items.buildItemUri(itemId));
-    }
-
-    private ItemLoader(@NonNull Context context, Uri uri) {
-        super(context, uri, Query.PROJECTION, null, null, WiulgiContract.Items.DEFAULT_SORT);
     }
 
 

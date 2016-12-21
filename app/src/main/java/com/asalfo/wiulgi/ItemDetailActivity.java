@@ -1,8 +1,6 @@
 package com.asalfo.wiulgi;
 
-import android.content.ContentValues;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,10 +15,8 @@ import android.util.Log;
 import android.view.View;
 
 import com.asalfo.wiulgi.data.model.Item;
-import com.asalfo.wiulgi.data.provider.WiulgiContract;
 import com.asalfo.wiulgi.event.EventCode;
 import com.asalfo.wiulgi.event.ItemEvent;
-import com.asalfo.wiulgi.event.MessageEvent;
 import com.asalfo.wiulgi.http.WiulgiApi;
 import com.asalfo.wiulgi.ui.ItemAdapter;
 import com.asalfo.wiulgi.ui.ItemHeaderView;
@@ -37,7 +33,7 @@ import retrofit2.Response;
 
 public class ItemDetailActivity extends AppCompatActivity
         implements ItemDetailActivityFragment.OnFragmentInteractionListener,
-        WiulgiApi.OnApiResponseListener{
+        WiulgiApi.OnApiResponseListener {
 
     public static final String LOG_TAG = ItemDetailActivity.class.getSimpleName();
 
@@ -60,12 +56,10 @@ public class ItemDetailActivity extends AppCompatActivity
     @Nullable
     @BindView(R.id.appBarLayout)
     AppBarLayout mAppBarLayout;
-
+    WiulgiApi mApi;
     private String mTitle;
     private boolean isHideToolbarView = false;
-    private  ItemDetailActivityFragment mFragment;
-
-    WiulgiApi mApi;
+    private ItemDetailActivityFragment mFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,14 +67,12 @@ public class ItemDetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_item_detail);
 
         ButterKnife.bind(this);
-        mApi = new WiulgiApi(this,this);
+        mApi = new WiulgiApi(this, this);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-
-
-        mItemHeaderView.addOnThumbnailChangedListener(new ItemHeaderView.OnThumbnailChangedListener(){
+        mItemHeaderView.addOnThumbnailChangedListener(new ItemHeaderView.OnThumbnailChangedListener() {
 
             @Override
             public void onThumbnailChanged(@NonNull final ItemHeaderView itemHeaderView, String thumbnailUrl) {
@@ -123,10 +115,9 @@ public class ItemDetailActivity extends AppCompatActivity
         });
 
 
-
         if (savedInstanceState == null) {
             Uri contentUri = getIntent().getData();
-            mFragment = ItemDetailActivityFragment.createInstance(contentUri,getIntent().getBooleanExtra("mongo_id",false));
+            mFragment = ItemDetailActivityFragment.createInstance(contentUri, getIntent().getBooleanExtra("mongo_id", false));
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.content_frame, mFragment)
                     .commit();
@@ -148,25 +139,25 @@ public class ItemDetailActivity extends AppCompatActivity
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(@NonNull ItemEvent event){
+    public void onMessageEvent(@NonNull ItemEvent event) {
 
         Snackbar snackbar = Snackbar
-                .make(mCoordinatorLayout,event.getMessage(), Snackbar.LENGTH_LONG);
+                .make(mCoordinatorLayout, event.getMessage(), Snackbar.LENGTH_LONG);
         snackbar.show();
-        switch (event.getType()){
+        switch (event.getType()) {
 
             case EventCode.EVENT_ADD_WISHLIST:
-                mApi.addToWhislist(event.getItem(),"add");
+                mApi.addToWhislist(event.getItem(), "add");
                 break;
             case EventCode.EVENT_REMOVE_WISHLIST:
-                mApi.addToWhislist(event.getItem(),"remove");
+                mApi.addToWhislist(event.getItem(), "remove");
                 break;
 
             case EventCode.EVENT_ADD_FAVORITE:
-                mApi.like(event.getItem(),"add");
+                mApi.like(event.getItem(), "add");
                 break;
             case EventCode.EVENT_REMOVE_FAVORITE:
-                mApi.like(event.getItem(),"remove");
+                mApi.like(event.getItem(), "remove");
                 break;
         }
     }
@@ -186,7 +177,7 @@ public class ItemDetailActivity extends AppCompatActivity
     @Override
     public void onApiRequestFailure(int statusCode, String message) {
 
-        Log.e(LOG_TAG,message);
+        Log.e(LOG_TAG, message);
     }
 
     @Override
@@ -201,6 +192,6 @@ public class ItemDetailActivity extends AppCompatActivity
 
     @Override
     public void onApiRequestSuccess(int i, @NonNull Response response) {
-        Log.v(LOG_TAG,response.body().toString());
+        Log.v(LOG_TAG, response.body().toString());
     }
 }

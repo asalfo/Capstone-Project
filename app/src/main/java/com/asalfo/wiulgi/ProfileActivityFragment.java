@@ -2,7 +2,6 @@ package com.asalfo.wiulgi;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,10 +21,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
 import com.asalfo.wiulgi.auth.ProfileManager;
 import com.asalfo.wiulgi.auth.User;
-import com.asalfo.wiulgi.data.model.Item;
 import com.asalfo.wiulgi.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -92,8 +89,6 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
     private MenuItem mButtonSave;
 
 
-
-
     public ProfileActivityFragment() {
     }
 
@@ -127,7 +122,7 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-            inflater.inflate(R.menu.menu_profile, menu);
+        inflater.inflate(R.menu.menu_profile, menu);
 
         mButtonSave = menu.getItem(0);
     }
@@ -147,7 +142,6 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
     }
 
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -160,24 +154,24 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
     }
 
 
-
-
     private void bindUser() {
 
         TextWatcher mTextWatcher = new TextWatcher() {
 
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(mButtonSave != null) {
+                if (mButtonSave != null) {
                     mButtonSave.setEnabled(true);
                 }
             }
         };
 
-       User user = ProfileManager.getInstance().getUser();
+        User user = ProfileManager.getInstance().getUser();
         if (user != null) {
 
             mAvatarView.setImageDrawable(Utils.createTextDrawable(user.getUsername()));
@@ -191,11 +185,11 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
             mBirthDateText.addTextChangedListener(mTextWatcher);
 
             String gender = user.getGender();
-            if(gender == null){
+            if (gender == null) {
                 mGender.check(NONE);
-            }else if (gender.toLowerCase().equals(FEMALE)){
+            } else if (gender.toLowerCase().equals(FEMALE)) {
                 mGender.check(R.id.female);
-            }else if(gender.toLowerCase().equals(MALE)) {
+            } else if (gender.toLowerCase().equals(MALE)) {
                 mGender.check(R.id.male);
             }
 
@@ -211,7 +205,7 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
                 @Override
                 public void onClick(View view) {
                     ProfileManager.getInstance().logOut();
-                   getActivity().finish();
+                    getActivity().finish();
                 }
             });
 
@@ -221,11 +215,11 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
         }
     }
 
-    private void updateProfile(){
+    private void updateProfile() {
 
         String firstname = mFirstnameText.getText().toString();
-        String lastname =  mLastnameText.getText().toString();
-        String birtdate =  mBirthDateText.getText().toString();
+        String lastname = mLastnameText.getText().toString();
+        String birtdate = mBirthDateText.getText().toString();
         int selectedIndex = mGender.getCheckedRadioButtonId();
         RadioButton gender = (RadioButton) getActivity().findViewById(selectedIndex);
 
@@ -233,16 +227,13 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
         user.setFirstName(firstname);
         user.setLastName(lastname);
         user.setBirthDate(birtdate);
-        if(gender != null)
-           user.setGender(gender.getText().toString());
+        if (gender != null)
+            user.setGender(gender.getText().toString());
 
 
         mListener.onProfileChanged(user);
 
     }
-
-
-
 
 
     private void setDateTimeField() {
@@ -258,13 +249,13 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
                 mBirthDateText.setText(mDateFormatter.format(newDate.getTime()));
             }
 
-        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
 
     @Override
     public void onClick(View v) {
-        if(v == mBirthDateText) {
+        if (v == mBirthDateText) {
             birthDatePickerDialog.show();
         }
     }

@@ -6,9 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,7 +21,6 @@ import com.asalfo.wiulgi.data.provider.WiulgiContract;
 import com.asalfo.wiulgi.sync.WiulgiSyncAdapter;
 import com.asalfo.wiulgi.ui.ItemAdapter;
 import com.asalfo.wiulgi.ui.WiugliRecyclerView;
-
 import com.asalfo.wiulgi.util.Utils;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -35,7 +31,7 @@ import butterknife.ButterKnife;
 public class WishlistFragment extends BaseFragment {
 
 
-
+    private static final int ITEM_LOADER = 0;
     @Nullable
     @BindView(R.id.recycler_view)
     WiugliRecyclerView mRecyclerView;
@@ -46,11 +42,8 @@ public class WishlistFragment extends BaseFragment {
     private ItemAdapter mAdapter;
     @Nullable
     private OnFragmentInteractionListener mListener;
-
-
     private boolean mItemClicked;
     private LatLng mLatestLocation;
-    private static final int ITEM_LOADER = 0;
 
 
     public WishlistFragment() {
@@ -60,11 +53,11 @@ public class WishlistFragment extends BaseFragment {
 
     public static WishlistFragment newInstance(String title) {
 
-        if(!ProfileManager.getInstance().isLoggedIn())
+        if (!ProfileManager.getInstance().isLoggedIn())
             return null;
         WishlistFragment fragment = new WishlistFragment();
         Bundle args = new Bundle();
-        args.putString(BaseFragment.ACTIVITY_TITLE,title);
+        args.putString(BaseFragment.ACTIVITY_TITLE, title);
         fragment.setArguments(args);
         return fragment;
     }
@@ -98,9 +91,9 @@ public class WishlistFragment extends BaseFragment {
             mAdapter = new ItemAdapter(getActivity(), new ItemAdapter.ItemAdapterOnClickHandler() {
                 @Override
                 public void onClick(Long itemId, ItemAdapter.ViewHolder vh) {
-                    onItemSelected(itemId,vh);
+                    onItemSelected(itemId, vh);
                 }
-            },mEmptyView);
+            }, mEmptyView);
    /*         mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getActivity(),
                     new RecyclerViewItemClickListener.OnItemClickListener() {
                         @Override
@@ -112,7 +105,7 @@ public class WishlistFragment extends BaseFragment {
             mRecyclerView.setAdapter(mAdapter);
         }
 
-       return view;
+        return view;
     }
 
 
@@ -150,16 +143,14 @@ public class WishlistFragment extends BaseFragment {
     }
 
 
-
-
     /*
             Updates the empty list view with contextually relevant information that the user can
             use to determine why they aren't seeing weather.
          */
     private void updateEmptyView() {
-        if ( mAdapter.getItemCount() == 0 ) {
+        if (mAdapter.getItemCount() == 0) {
 
-            if ( null != mEmptyView ) {
+            if (null != mEmptyView) {
                 // if cursor is empty, why? do we have an invalid location
                 int message = R.string.empty_list;
                 @WiulgiSyncAdapter.LocationStatus int location = Utils.getLocationStatus(getActivity());
@@ -187,7 +178,7 @@ public class WishlistFragment extends BaseFragment {
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         ItemLoader loader = ItemLoader.newAllItemsInstance(getActivity());
-     loader.setSelection(WiulgiContract.Items.WISHED+" = ?");
+        loader.setSelection(WiulgiContract.Items.WISHED + " = ?");
         loader.setSelectionArgs(new String[]{"1"});
 
         return loader;
@@ -196,7 +187,7 @@ public class WishlistFragment extends BaseFragment {
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-            mAdapter.swapCursor(data);
+        mAdapter.swapCursor(data);
     }
 
     @Override
@@ -204,16 +195,15 @@ public class WishlistFragment extends BaseFragment {
         mAdapter.swapCursor(null);
     }
 
-    public void onItemSelected(long itemId,ItemAdapter.ViewHolder vh) {
+    public void onItemSelected(long itemId, ItemAdapter.ViewHolder vh) {
 
 
         if (!mItemClicked) {
             mItemClicked = true;
             Uri contentUri = WiulgiContract.Items.buildItemUri(itemId);
-            mListener.onFragmentInteraction(contentUri,ItemDetailActivity.class,vh);
+            mListener.onFragmentInteraction(contentUri, ItemDetailActivity.class, vh);
         }
     }
-
 
 
 }

@@ -40,10 +40,9 @@ import retrofit2.Response;
 public class RecommendationTaskService extends GcmTaskService {
 
 
-    private final String LOG_TAG = RecommendationTaskService.class.getSimpleName();
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     private static final int ITEM_NOTIFICATION_ID = 3004;
-
+    private final String LOG_TAG = RecommendationTaskService.class.getSimpleName();
     private Context mContext;
 
 
@@ -124,7 +123,7 @@ public class RecommendationTaskService extends GcmTaskService {
                     // notifications.  Just throw in some data.
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(mContext)
-                                    .setSmallIcon(R.drawable.cast_ic_notification_small_icon)
+                                    .setSmallIcon(R.drawable.ic_notification)
                                     .setColor(resources.getColor(R.color.colorPrimary))
                                     .setContentTitle(title)
                                     .setContentText(contentText);

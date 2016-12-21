@@ -20,17 +20,11 @@ import java.util.List;
 
 public class WiulgiProvider extends ContentProvider {
 
-    @Nullable
-    private SQLiteOpenHelper mOpenHelper;
-
-    interface Tables {
-        String ITEMS = "items";
-    }
-
     private static final int ITEMS = 0;
     private static final int ITEMS__ID = 1;
-
     private static final UriMatcher sUriMatcher = buildUriMatcher();
+    @Nullable
+    private SQLiteOpenHelper mOpenHelper;
 
     @NonNull
     private static UriMatcher buildUriMatcher() {
@@ -40,8 +34,6 @@ public class WiulgiProvider extends ContentProvider {
         matcher.addURI(authority, "items/#", ITEMS__ID);
         return matcher;
     }
-
-
 
     @Override
     public boolean onCreate() {
@@ -155,8 +147,6 @@ public class WiulgiProvider extends ContentProvider {
         }
     }
 
-
-
     /**
      * In case of a conflict when inserting the values, another update query is sent.
      *
@@ -178,5 +168,11 @@ public class WiulgiProvider extends ContentProvider {
                 throw e;
         }
         return 0;
+    }
+
+
+
+    interface Tables {
+        String ITEMS = "items";
     }
 }

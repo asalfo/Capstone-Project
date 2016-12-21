@@ -4,13 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
-
-import android.view.View;
 
 import com.asalfo.wiulgi.auth.User;
 import com.asalfo.wiulgi.http.WiulgiApi;
@@ -21,8 +17,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Response;
 
-public class ProfileActivity extends AppCompatActivity  implements
-        WiulgiApi.OnApiResponseListener ,
+public class ProfileActivity extends AppCompatActivity implements
+        WiulgiApi.OnApiResponseListener,
         ProfileActivityFragment.OnFragmentInteractionListener {
 
     @Nullable
@@ -37,7 +33,6 @@ public class ProfileActivity extends AppCompatActivity  implements
     private Tracker mTracker;
 
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +42,7 @@ public class ProfileActivity extends AppCompatActivity  implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        mApi = new WiulgiApi(this,this);
+        mApi = new WiulgiApi(this, this);
 
 
         if (savedInstanceState == null) {
@@ -64,11 +59,10 @@ public class ProfileActivity extends AppCompatActivity  implements
     }
 
 
-
     @Override
     public void onApiRequestFailure(int statusCode, String message) {
         Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, "Sorry your can't be updated.", Snackbar.LENGTH_LONG);
+                .make(coordinatorLayout, R.string.error_updating_profile, Snackbar.LENGTH_LONG);
 
         snackbar.show();
 
@@ -87,7 +81,7 @@ public class ProfileActivity extends AppCompatActivity  implements
     @Override
     public void onApiRequestSuccess(int i, Response response) {
         Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, "Profile updeted successfully.", Snackbar.LENGTH_LONG);
+                .make(coordinatorLayout, R.string.profile_updated, Snackbar.LENGTH_LONG);
 
         snackbar.show();
     }

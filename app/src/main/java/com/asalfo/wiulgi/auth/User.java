@@ -20,6 +20,18 @@ import java.util.ArrayList;
 public class User extends Model implements Parcelable {
 
 
+    public static final Parcelable.Creator<User> CREATOR
+            = new Parcelable.Creator<User>() {
+        @NonNull
+        public User createFromParcel(@NonNull Parcel in) {
+            return new User(in);
+        }
+
+        @NonNull
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
     @SerializedName("id")
     private String mId;
     @SerializedName("username")
@@ -52,30 +64,16 @@ public class User extends Model implements Parcelable {
     @SerializedName("recommended_items")
     private ArrayList<Item> recommendedItems;
 
-
     public User() {
     }
+
+
 
     public User(String username, String email, String plainPassword) {
         this.mUsername = username;
         this.mEmail = email;
         this.mPlainPassword = plainPassword;
     }
-
-
-
-    public static final Parcelable.Creator<User> CREATOR
-            = new Parcelable.Creator<User>() {
-        @NonNull
-        public User createFromParcel(@NonNull Parcel in) {
-            return new User(in);
-        }
-
-        @NonNull
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 
     private User(@NonNull Parcel in) {
 
@@ -91,6 +89,11 @@ public class User extends Model implements Parcelable {
         this.mAuthToken = in.readString();
         this.mFacebookToken = in.readString();
 
+    }
+
+    @Nullable
+    public static User fromString(String userString) {
+        return (User) Model.fromString(userString, User.class);
     }
 
     @Override
@@ -115,8 +118,6 @@ public class User extends Model implements Parcelable {
         dest.writeString(mFacebookToken);
 
     }
-
-
 
     public String getId() {
         return mId;
@@ -204,12 +205,6 @@ public class User extends Model implements Parcelable {
 
     public void setAuthToken(String token) {
         this.mAuthToken = token;
-    }
-
-
-    @Nullable
-    public static User fromString(String userString) {
-        return (User) Model.fromString(userString, User.class);
     }
 
     public String getFacebookToken() {
