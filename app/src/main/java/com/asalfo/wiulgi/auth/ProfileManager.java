@@ -2,6 +2,8 @@ package com.asalfo.wiulgi.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.asalfo.wiulgi.util.Settings;
 
@@ -12,6 +14,7 @@ public class ProfileManager {
 
     private List<ProfileListener> mListeners;
     private SharedPreferences mSharedPreferences;
+    @Nullable
     private User mUser;
 
     public interface ProfileListener {
@@ -26,6 +29,7 @@ public class ProfileManager {
         private static final ProfileManager instance = new ProfileManager();
     }
 
+    @NonNull
     public static ProfileManager getInstance() {
         return ProfileManagerHolder.instance;
     }
@@ -40,7 +44,7 @@ public class ProfileManager {
         }
     }
 
-    public void init(Context context) {
+    public void init(@NonNull Context context) {
         this.mSharedPreferences = context.getSharedPreferences("com.asalfo.wiulgi.user", Context.MODE_PRIVATE);
         synchronized (ProfileManager.class) {
             if (isLoggedIn()) {
@@ -53,7 +57,7 @@ public class ProfileManager {
         }
     }
 
-    public void registerListener(ProfileListener listener) {
+    public void registerListener(@NonNull ProfileListener listener) {
         synchronized (ProfileManager.class) {
             if (!this.mListeners.contains(listener)) {
                 this.mListeners.add(listener);
@@ -97,11 +101,12 @@ public class ProfileManager {
         }
     }
 
+    @Nullable
     public User getUser() {
         return this.mUser;
     }
 
-    public void logIn(User user) {
+    public void logIn(@NonNull User user) {
         Settings.getInstance().setUserApiToken(user.getAuthToken());
 
             synchronized (ProfileManager.class) {

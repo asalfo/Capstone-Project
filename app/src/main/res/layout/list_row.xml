@@ -31,7 +31,6 @@
                 android:transitionName="thumbnail"
                 android:baselineAlignBottom="true"
                 android:contentDescription="@string/thumbnail"
-
                 tools:targetApi="lollipop" />
 
             <TextView
@@ -65,7 +64,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp">
+            android:layout_marginEnd="8dp"
+            tools:ignore="UseCompoundDrawables">
 
             <TextView
                 android:id="@+id/brand"
@@ -80,7 +80,7 @@
                 android:id="@+id/count_average"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                 />
+                android:contentDescription="@string/vote_average_desc" />
         </LinearLayout>
     </LinearLayout>
 

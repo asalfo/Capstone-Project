@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.graphics.Palette;
@@ -36,7 +37,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private final String LOG_TAG = ItemAdapter.class.getSimpleName();
     private static final int VIEW_TYPE_AD = 0;
     private static final int VIEW_TYPE_ITEM = 1;
-    private static Context mContext;
+    private Context mContext;
     private static Typeface robotoLight;
     private int mImageSize;
     final private ItemAdapterOnClickHandler mClickHandler;
@@ -50,7 +51,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
 
 
-    public static interface ItemAdapterOnClickHandler {
+    public interface ItemAdapterOnClickHandler {
         void onClick(Long id, ViewHolder vh);
     }
 
@@ -63,6 +64,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     }
 
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
@@ -87,7 +89,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(final ItemAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull final ItemAdapter.ViewHolder viewHolder, int position) {
         mCursor.moveToPosition(position);
 
   int viewType = getItemViewType(position);
@@ -110,13 +112,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                    .resize(mImageSize, mImageSize)
                    .into(new Target() {
                        @Override
-                       public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                       public void onBitmapLoaded(@NonNull Bitmap bitmap, Picasso.LoadedFrom from) {
                            assert imageView != null;
                            imageView.setImageBitmap(bitmap);
                            Palette.from(bitmap)
                                    .generate(new Palette.PaletteAsyncListener() {
                                        @Override
-                                       public void onGenerated(Palette palette) {
+                                       public void onGenerated(@NonNull Palette palette) {
                                            Palette.Swatch textSwatch = palette.getDominantSwatch();
 
                                            if (textSwatch == null) {
@@ -212,7 +214,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         @BindView(R.id.adView)
         AdView mAdView;
 
-        public ViewHolder(View view) {
+        public ViewHolder(@NonNull View view) {
             super(view);
             ButterKnife.bind(this, view);
             view.setOnClickListener(this);

@@ -2,9 +2,11 @@ package com.asalfo.wiulgi.http;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.asalfo.wiulgi.BuildConfig;
 import com.asalfo.wiulgi.auth.ProfileManager;
+import com.asalfo.wiulgi.data.model.WiugliCollection;
 import com.asalfo.wiulgi.util.Settings;
 import com.asalfo.wiulgi.auth.User;
 import com.asalfo.wiulgi.data.model.ApiError;
@@ -49,14 +51,14 @@ public class WiulgiApi {
 
 
 
-    public void signIn(User user){
+    public void signIn(@NonNull User user){
         ApiInterface apiEndPoint =
                 ApiServiceGenerator.createService(ApiInterface.class, user.getEmail(), user.getPlainPassword());
         Call<User> call = apiEndPoint.login();
 
         call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<User> call, @NonNull Response<User> response) {
                 if(response.isSuccessful()){
                     mListener.onApiRequestSuccess(response.code(),response);
                 }else{
@@ -66,14 +68,14 @@ public class WiulgiApi {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<User> call, @NonNull Throwable t) {
                 mListener.onApiRequestFailure(500, t.getMessage());
             }
         });
     }
 
 
-    public void CreateUser(User user){
+    public void createUser(User user){
 
         ApiInterface apiEndPoint =
                 ApiServiceGenerator.createService(ApiInterface.class);
@@ -82,7 +84,7 @@ public class WiulgiApi {
 
         call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<User> call, @NonNull Response<User> response) {
                 if(response.isSuccessful()){
                     mListener.onApiRequestSuccess(response.code(),response);
                 }else{
@@ -92,7 +94,7 @@ public class WiulgiApi {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<User> call, @NonNull Throwable t) {
 
                 mListener.onApiRequestFailure(500,t.getMessage());
             }
@@ -101,7 +103,7 @@ public class WiulgiApi {
     }
 
 
-    public void updateUser(User user){
+    public void updateUser(@NonNull User user){
 
         String token = "Bearer "+ Settings.getInstance().getUserApiToken();
 
@@ -112,7 +114,7 @@ public class WiulgiApi {
 
         call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<User> call, @NonNull Response<User> response) {
                 if(response.isSuccessful()){
                     ProfileManager.getInstance().setUser(response.body());
                     mListener.onApiRequestSuccess(response.code(),response);
@@ -123,7 +125,7 @@ public class WiulgiApi {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<User> call, @NonNull Throwable t) {
 
                 mListener.onApiRequestFailure(500,t.getMessage());
             }
@@ -132,7 +134,7 @@ public class WiulgiApi {
     }
 
 
-    public void addToWhislist(Item item,String action) {
+    public void addToWhislist(@NonNull Item item, String action) {
 
         String token = "Bearer "+ Settings.getInstance().getUserApiToken();
 
@@ -144,7 +146,7 @@ public class WiulgiApi {
             Call<User> call = apiEndPoint.addToWishlist(user.getUsername(),item.getMongoId(),action);
             call.enqueue(new Callback<User>() {
                 @Override
-                public void onResponse(Call<User> call, Response<User> response) {
+                public void onResponse(Call<User> call, @NonNull Response<User> response) {
                     if (response.isSuccessful()) {
                         mListener.onApiRequestSuccess(response.code(),response);
                     } else {
@@ -153,7 +155,7 @@ public class WiulgiApi {
                     }
                 }
                 @Override
-                public void onFailure(Call<User> call, Throwable t) {
+                public void onFailure(Call<User> call, @NonNull Throwable t) {
                     mListener.onApiRequestFailure(500,t.getMessage());
                 }
             });
@@ -163,7 +165,7 @@ public class WiulgiApi {
 
 
 
-    public void like(Item item,String action) {
+    public void like(@NonNull Item item, String action) {
 
         String token = "Bearer "+ Settings.getInstance().getUserApiToken();
 
@@ -175,7 +177,7 @@ public class WiulgiApi {
             Call<User> call = apiEndPoint.like(user.getUsername(),item.getMongoId(),action);
             call.enqueue(new Callback<User>() {
                 @Override
-                public void onResponse(Call<User> call, Response<User> response) {
+                public void onResponse(Call<User> call, @NonNull Response<User> response) {
                     if (response.isSuccessful()) {
                         mListener.onApiRequestSuccess(response.code(),response);
                     } else {
@@ -184,7 +186,7 @@ public class WiulgiApi {
                     }
                 }
                 @Override
-                public void onFailure(Call<User> call, Throwable t) {
+                public void onFailure(Call<User> call, @NonNull Throwable t) {
                     mListener.onApiRequestFailure(500,t.getMessage());
                 }
             });
@@ -204,7 +206,7 @@ public class WiulgiApi {
             Call<Rating> call = apiEndPoint.rateItem(rating);
             call.enqueue(new Callback<Rating>() {
                 @Override
-                public void onResponse(Call<Rating> call, Response<Rating> response) {
+                public void onResponse(Call<Rating> call, @NonNull Response<Rating> response) {
                     if (response.isSuccessful()) {
                         mListener.onApiRequestSuccess(response.code(),response);
                     } else {
@@ -213,7 +215,37 @@ public class WiulgiApi {
                     }
                 }
                 @Override
-                public void onFailure(Call<Rating> call, Throwable t) {
+                public void onFailure(Call<Rating> call, @NonNull Throwable t) {
+                    mListener.onApiRequestFailure(500,t.getMessage());
+                }
+            });
+
+        }
+    }
+
+
+    public void getRecommendations() {
+
+        String token = "Bearer "+ Settings.getInstance().getUserApiToken();
+
+        ApiInterface apiEndPoint =
+                ApiServiceGenerator.createService(ApiInterface.class,token);
+
+        User user = ProfileManager.getInstance().getUser();
+        if (null != user) {
+            Call<WiugliCollection<Item>> call = apiEndPoint.recommended(user.getUsername());
+            call.enqueue(new Callback<WiugliCollection<Item>>() {
+                @Override
+                public void onResponse(Call<WiugliCollection<Item>> call, @NonNull Response<WiugliCollection<Item>> response) {
+                    if (response.isSuccessful()) {
+                        mListener.onApiRequestSuccess(response.code(),response);
+                    } else {
+                        ApiError error = ApiErrorUtil.parseError(response);
+                        mListener.onApiRequestFailure(error.getStatusCode(),error.getMessage());
+                    }
+                }
+                @Override
+                public void onFailure(Call<WiugliCollection<Item>> call, @NonNull Throwable t) {
                     mListener.onApiRequestFailure(500,t.getMessage());
                 }
             });

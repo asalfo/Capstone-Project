@@ -13,12 +13,12 @@ import com.asalfo.wiulgi.util.Constants;
 public class WidgetProvider extends AppWidgetProvider {
 
     @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+    public void onUpdate(@NonNull Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         context.startService(new Intent(context, WidgetIntentService.class));
     }
 
     @Override
-    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager,
+    public void onAppWidgetOptionsChanged(@NonNull Context context, AppWidgetManager appWidgetManager,
                                           int appWidgetId, Bundle newOptions) {
         context.startService(new Intent(context, WidgetIntentService.class));
     }
@@ -32,7 +32,7 @@ public class WidgetProvider extends AppWidgetProvider {
     }
 
 
-    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String symbol) {
+    public static void updateAppWidget(@NonNull Context context, AppWidgetManager appWidgetManager, int appWidgetId, String symbol) {
         Intent intent = new  Intent(context, WidgetIntentService.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,appWidgetId);
         context.startService(intent);

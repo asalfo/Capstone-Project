@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
@@ -46,31 +47,40 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
     public static final int NONE = -1;
 
 
+    @Nullable
     @BindView(R.id.avatarView)
     ImageView mAvatarView;
 
 
+    @Nullable
     @BindView(R.id.sign_out)
     TextView mSignOut;
 
+    @Nullable
     @BindView(R.id.sign_out_text)
     TextView mSignOutText;
 
+    @Nullable
     @BindView(R.id.profile_username)
     TextView mUsername;
 
+    @Nullable
     @BindView(R.id.user_email_address)
     TextView mUserEmailAddress;
 
+    @Nullable
     @BindView(R.id.input_firtname)
     TextInputEditText mFirstnameText;
 
+    @Nullable
     @BindView(R.id.input_lastname)
     TextInputEditText mLastnameText;
 
+    @Nullable
     @BindView(R.id.input_birth_date)
     TextInputEditText mBirthDateText;
 
+    @Nullable
     @BindView(R.id.gender)
     RadioGroup mGender;
 
@@ -98,7 +108,7 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
@@ -116,7 +126,7 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
 
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
             inflater.inflate(R.menu.menu_profile, menu);
 
         mButtonSave = menu.getItem(0);
@@ -124,7 +134,7 @@ public class ProfileActivityFragment extends Fragment implements View.OnClickLis
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // handle item selection
         switch (item.getItemId()) {
 

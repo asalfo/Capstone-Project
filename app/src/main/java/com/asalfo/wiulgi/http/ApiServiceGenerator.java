@@ -2,6 +2,7 @@ package com.asalfo.wiulgi.http;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 
@@ -26,6 +27,7 @@ public class ApiServiceGenerator {
     public static String apiBaseUrl = BuildConfig.WIULGI_API_END_POINT;
 
 
+    @NonNull
     private static Gson gson = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .create();
@@ -33,6 +35,7 @@ public class ApiServiceGenerator {
     private static Retrofit retrofit;
 
 
+    @NonNull
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -40,10 +43,12 @@ public class ApiServiceGenerator {
                     .baseUrl(apiBaseUrl);
 
 
+    @NonNull
     private static HttpLoggingInterceptor logging =
             new HttpLoggingInterceptor()
                     .setLevel(HttpLoggingInterceptor.Level.BODY);
 
+    @NonNull
     private static OkHttpClient.Builder httpClient =
             new OkHttpClient.Builder()
                     .addInterceptor(logging)
@@ -63,13 +68,13 @@ public class ApiServiceGenerator {
 
 
 
-    public static <S> S createService(Class<S> serviceClass) {
+    public static <S> S createService(@NonNull Class<S> serviceClass) {
         return createService(serviceClass,"");
     }
 
 
     public static <S> S createService(
-            Class<S> serviceClass, String clientId, String clientSecret) {
+            @NonNull Class<S> serviceClass, String clientId, String clientSecret) {
         if (!TextUtils.isEmpty(clientId)
                 && !TextUtils.isEmpty(clientSecret)) {
             String authToken = Credentials.basic(clientId, clientSecret);
@@ -81,7 +86,7 @@ public class ApiServiceGenerator {
 
 
     public static <S> S createService(
-            Class<S> serviceClass, final String authToken) {
+            @NonNull Class<S> serviceClass, final String authToken) {
         if (!TextUtils.isEmpty(authToken)) {
             httpClient.addInterceptor(
                     new AuthenticationInterceptor(authToken));
@@ -91,7 +96,7 @@ public class ApiServiceGenerator {
     }
 
 
-    private static <S> S create(Class<S> serviceClass) {
+    private static <S> S create(@NonNull Class<S> serviceClass) {
         if (! httpClient.interceptors().contains(logging)) {
             httpClient.addInterceptor(logging);
         }

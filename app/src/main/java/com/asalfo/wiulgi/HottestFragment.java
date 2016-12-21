@@ -9,6 +9,8 @@ import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -50,13 +52,18 @@ import static com.google.android.gms.internal.zzs.TAG;
 public class HottestFragment extends BaseFragment {
 
 
+    @Nullable
     @BindView(R.id.recycler_view)
     WiugliRecyclerView mRecyclerView;
+    @Nullable
     @BindView(R.id.recyclerview_item_empty)
     TextView mEmptyView;
+    @Nullable
     @BindView(R.id.adView)
     AdView mAdView;
+    @Nullable
     private ItemAdapter mAdapter;
+    @Nullable
     private OnFragmentInteractionListener mListener;
 
 
@@ -71,6 +78,7 @@ public class HottestFragment extends BaseFragment {
     }
 
 
+    @NonNull
     public static HottestFragment newInstance(String title) {
         HottestFragment fragment = new HottestFragment();
         Bundle args = new Bundle();
@@ -83,7 +91,7 @@ public class HottestFragment extends BaseFragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
 
@@ -209,6 +217,7 @@ public class HottestFragment extends BaseFragment {
         }
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return ItemLoader.newAllItemsInstance(getActivity());

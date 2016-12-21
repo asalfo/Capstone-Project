@@ -19,7 +19,8 @@
     <color name="secondary_text">#727272</color>
     <!-- the activated state color -->
     <color name="activated">#E0E0E0</color>
-    <color name="price_text">#607D8B</color>
+    <color name="price_text">#3a515c</color>
+    <color name="price_text_white">#FFFFFF</color>
     <color name="white">#FFFFFF</color>
 
 </resources>

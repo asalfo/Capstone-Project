@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.asalfo.wiulgi.BuildConfig;
@@ -63,7 +64,7 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     @Override
-    public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
+    public void onPerformSync(Account account, @NonNull Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.d(LOG_TAG, "Starting sync");
 
         ApiInterface api = ApiServiceGenerator.createService(ApiInterface.class, null, null);
@@ -141,7 +142,7 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
     /**
      * Helper method to schedule the sync adapter periodic execution
      */
-    public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
+    public static void configurePeriodicSync(@NonNull Context context, int syncInterval, int flexTime) {
         Account account = getSyncAccount(context);
         String authority = WiulgiContract.CONTENT_AUTHORITY;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -161,7 +162,7 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
      * Helper method to have the sync adapter sync immediately
      * @param context The context used to access the account service
      */
-    public static void syncImmediately(Context context) {
+    public static void syncImmediately(@NonNull Context context) {
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
@@ -177,7 +178,7 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
      * @param context The context used to access the account service
      * @return a fake account.
      */
-    public static Account getSyncAccount(Context context) {
+    public static Account getSyncAccount(@NonNull Context context) {
         // Get an instance of the Android account manager
         AccountManager accountManager =
                 (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
@@ -208,7 +209,7 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
         return newAccount;
     }
 
-    private static void onAccountCreated(Account newAccount, Context context) {
+    private static void onAccountCreated(Account newAccount, @NonNull Context context) {
         /*
          * Since we've created an account
          */
@@ -225,7 +226,7 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
         syncImmediately(context);
     }
 
-    public static void initializeSyncAdapter(Context context) {
+    public static void initializeSyncAdapter(@NonNull Context context) {
         getSyncAccount(context);
     }
 
@@ -236,10 +237,10 @@ public class WiulgiSyncAdapter extends AbstractThreadedSyncAdapter {
      * @param c Context to get the PreferenceManager from.
      * @param locationStatus The IntDef value to set
      */
-    static private void setLocationStatus(Context c, @LocationStatus int locationStatus){
+    static private void setLocationStatus(@NonNull Context c, @LocationStatus int locationStatus){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
         SharedPreferences.Editor spe = sp.edit();
         spe.putInt(c.getString(R.string.pref_server_status_key), locationStatus);
-        spe.commit();
+        spe.apply();
     }
 }

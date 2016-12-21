@@ -29,6 +29,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.Layout;
 import android.text.StaticLayout;
@@ -40,7 +42,11 @@ import com.asalfo.wiulgi.R;
 import com.asalfo.wiulgi.data.model.Item;
 import com.asalfo.wiulgi.data.provider.WiulgiContract;
 import com.asalfo.wiulgi.data.provider.WiulgiContract.ItemsColumns;
+import com.asalfo.wiulgi.service.RecommendationTaskService;
 import com.asalfo.wiulgi.sync.WiulgiSyncAdapter;
+import com.google.android.gms.gcm.GcmNetworkManager;
+import com.google.android.gms.gcm.PeriodicTask;
+import com.google.android.gms.gcm.Task;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
@@ -64,7 +70,7 @@ public class Utils {
      * Check if the app has access to fine location permission. On pre-M
      * devices this will always return true.
      */
-    public static boolean checkFineLocationPermission(Context context) {
+    public static boolean checkFineLocationPermission(@NonNull Context context) {
         return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
                 context, Manifest.permission.ACCESS_FINE_LOCATION);
     }
@@ -74,7 +80,8 @@ public class Utils {
      * display. As this is a sample, it only statically supports metric units.
      * A production app should check locale and support the correct units.
      */
-    public static String formatDistanceBetween(LatLng point1, LatLng point2) {
+    @Nullable
+    public static String formatDistanceBetween(@Nullable LatLng point1, @Nullable LatLng point2) {
         if (point1 == null || point2 == null) {
             return null;
         }
@@ -94,7 +101,7 @@ public class Utils {
     /**
      * Store the location in the app preferences.
      */
-    public static void storeLocation(Context context, LatLng location) {
+    public static void storeLocation(Context context, @NonNull LatLng location) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putLong(PREFERENCES_LAT, Double.doubleToRawLongBits(location.latitude));
@@ -105,7 +112,7 @@ public class Utils {
     /**
      * Fetch the location from app preferences.
      */
-    public static LatLng getLocation(Context context) {
+    public static LatLng getLocation(@NonNull Context context) {
         if (!checkFineLocationPermission(context)) {
             return null;
         }
@@ -143,7 +150,8 @@ public class Utils {
 
 
 
-    public static ArrayList itemListToContentVals(ArrayList<ContentProviderOperation> batchOperations,ArrayList<Item> items){
+    @NonNull
+    public static ArrayList itemListToContentVals(@NonNull ArrayList<ContentProviderOperation> batchOperations, @NonNull ArrayList<Item> items){
 
             if (items.size() > 0){
                 for (Item item : items){
@@ -153,7 +161,7 @@ public class Utils {
         return batchOperations;
     }
 
-    private static ContentProviderOperation buildBatchOperation(Item item){
+    private static ContentProviderOperation buildBatchOperation(@NonNull Item item){
 
         Uri dirUri = WiulgiContract.Items.buildDirUri();
         ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
@@ -181,7 +189,8 @@ public class Utils {
         return builder.build();
     }
 
-    public static ArrayList getItemsContentVals(ArrayList<ContentProviderOperation> batchOperations,ArrayList<Item> items,String column,String value){
+    @NonNull
+    public static ArrayList getItemsContentVals(@NonNull ArrayList<ContentProviderOperation> batchOperations, @NonNull ArrayList<Item> items, String column, String value){
 
         if (items.size() > 0){
             for (Item item : items){
@@ -229,7 +238,7 @@ public class Utils {
      * @param c Context used to get the ConnectivityManager
      * @return true if the network is available
      */
-    static public boolean isNetworkAvailable(Context c) {
+    static public boolean isNetworkAvailable(@NonNull Context c) {
         ConnectivityManager cm =
                 (ConnectivityManager)c.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -244,7 +253,7 @@ public class Utils {
      */
     @SuppressWarnings("ResourceType")
     static public @WiulgiSyncAdapter.LocationStatus
-    int getLocationStatus(Context c){
+    int getLocationStatus(@NonNull Context c){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
         return sp.getInt(c.getString(R.string.pref_server_status_key), WiulgiSyncAdapter.STATUS_UNKNOWN);
     }
@@ -253,7 +262,7 @@ public class Utils {
      * Resets the location status.  (Sets it to SunshineSyncAdapter.LOCATION_STATUS_UNKNOWN)
      * @param c Context used to get the SharedPreferences
      */
-    static public void resetLocationStatus(Context c){
+    static public void resetLocationStatus(@NonNull Context c){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
         SharedPreferences.Editor spe = sp.edit();
         spe.putInt(c.getString(R.string.pref_server_status_key), WiulgiSyncAdapter.STATUS_UNKNOWN);
@@ -261,11 +270,33 @@ public class Utils {
     }
 
 
-   static public TextDrawable createTextDrawable(String username) {
+   static public TextDrawable createTextDrawable(@NonNull String username) {
         ColorGenerator generator = ColorGenerator.MATERIAL;
         int color = generator.getColor(username);
         return TextDrawable.builder()
                 .buildRound(String.valueOf(username.charAt(0)), color);
+    }
+
+
+
+    static public void configureGCMTask(@NonNull Context context){
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String syncKey = context.getString(R.string.pref_sync_frequency_key);
+        Long period = Long.valueOf(prefs.getString(syncKey,"3600"));
+        long flex = 10L;
+
+        PeriodicTask periodicTask = new PeriodicTask.Builder()
+                .setService(RecommendationTaskService.class)
+                .setPeriod(period)
+                .setFlex(flex)
+                .setTag(Constants.PERIODIC_TAG)
+                .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
+                .setRequiresCharging(false)
+                .build();
+
+        GcmNetworkManager.getInstance(context).schedule(periodicTask);
+
     }
 
 }

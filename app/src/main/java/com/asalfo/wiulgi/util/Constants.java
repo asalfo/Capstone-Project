@@ -18,7 +18,7 @@ package com.asalfo.wiulgi.util;
 
 public class Constants {
 
-    private Constants() {};
+    private Constants() {}
 
     // Set to false to have the geofence trigger use the enhanced notifications instead
     public static final boolean USE_MICRO_APP = true;

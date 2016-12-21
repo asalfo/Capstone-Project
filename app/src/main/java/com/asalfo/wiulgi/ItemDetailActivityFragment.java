@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -56,18 +58,25 @@ public class ItemDetailActivityFragment extends BaseFragment  implements
     public static final String LOG_TAG = ItemDetailActivityFragment.class.getSimpleName();
     public static final String EXTRA_ITEM = "itemUri";
 
+    @Nullable
     @BindView(R.id.content_item_detail)
     RelativeLayout mContentItemDetail;
+    @Nullable
     @BindView(R.id.itemDescription)
     WiulgiExpandableTextView mDescriptionTextView;
+    @Nullable
     @BindView(R.id.itemBrand)
     TextView mBrand;
+    @Nullable
     @BindView(R.id.itemModel)
     TextView mModel;
+    @Nullable
     @BindView(R.id.itemColor)
     TextView mColor;
+    @Nullable
     @BindView(R.id.itemSize)
     TextView mSize;
+    @Nullable
     @BindView(R.id.ratingBar)
     RatingBar mRatingBar;
 
@@ -77,7 +86,9 @@ public class ItemDetailActivityFragment extends BaseFragment  implements
 
     public   Item mItem;
     private String mItemTitle;
+    @Nullable
     private Uri mUri;
+    @Nullable
     private ItemDetailActivityFragment.OnFragmentInteractionListener mListener;
     private final static int DETAIL_LOADER = 0;
     private final static int DETAIL_LOADER_MONGOID = 1;
@@ -89,7 +100,8 @@ public class ItemDetailActivityFragment extends BaseFragment  implements
 
 
 
-    public static ItemDetailActivityFragment createInstance(Uri contentUri,boolean hasMongoId) {
+    @NonNull
+    public static ItemDetailActivityFragment createInstance(Uri contentUri, boolean hasMongoId) {
         ItemDetailActivityFragment detailFragment = new ItemDetailActivityFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_ITEM, contentUri);
@@ -102,7 +114,7 @@ public class ItemDetailActivityFragment extends BaseFragment  implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_detail, container, false);
         ButterKnife.bind(this,view);
@@ -168,7 +180,7 @@ public class ItemDetailActivityFragment extends BaseFragment  implements
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void applyPalette(PaletteEvent event) {
+    public void applyPalette(@NonNull PaletteEvent event) {
        Palette palette = event.getPalette();
 
 
@@ -190,6 +202,7 @@ public class ItemDetailActivityFragment extends BaseFragment  implements
 
     }
 
+    @Nullable
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.d(LOG_TAG, "onCreateLoader " + mUri);
@@ -204,7 +217,7 @@ public class ItemDetailActivityFragment extends BaseFragment  implements
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(Loader<Cursor> loader, @NonNull Cursor cursor) {
         Log.d(LOG_TAG, "onLoadFinished " + cursor.getCount());
         if (cursor != null && cursor.moveToFirst()) {
 
@@ -221,26 +234,27 @@ public class ItemDetailActivityFragment extends BaseFragment  implements
             mColor.setText(mItem.getColor());
             mRatingBar.setRating(mItem.getVoteAverage());
 
+           if(mItem.getLocation() != null) {
+               ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(new OnMapReadyCallback() {
+                   @Override
+                   public void onMapReady(GoogleMap googleMap) {
+                       Log.d(LOG_TAG, "MapReady");
+                       mGoogleMap = googleMap;
 
-            ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap googleMap) {
-                    Log.d(LOG_TAG,"MapReady");
-                    mGoogleMap = googleMap;
+                       MarkerOptions place = new MarkerOptions().position(mItem.getLocation())
+                               .title("Store");
+                       mGoogleMap.addMarker(place);
 
-                    MarkerOptions place = new MarkerOptions().position(mItem.getLocation())
-                            .title("Store");
-                    mGoogleMap.addMarker(place);
+                       CameraPosition target = new CameraPosition.Builder()
+                               .target(mItem.getLocation())
+                               .zoom(14)
+                               .build();
+                       mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(target));
 
-                    CameraPosition target = new CameraPosition.Builder()
-                            .target(mItem.getLocation())
-                            .zoom(14)
-                            .build();
-                    mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+                   }
 
-                }
-
-            });
+               });
+           }
 
             mListener.onFragmentInteraction(mItem);
             sendScreenNameToGAnalytics(mItemTitle);
@@ -259,7 +273,7 @@ public class ItemDetailActivityFragment extends BaseFragment  implements
 
 
     @Override
-    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+    public void onRatingChanged(@NonNull RatingBar ratingBar, float rating, boolean fromUser) {
 
         if(fromUser) {
             User user = ProfileManager.getInstance().getUser();
@@ -293,7 +307,7 @@ public class ItemDetailActivityFragment extends BaseFragment  implements
     }
 
     @Override
-    public void onApiRequestSuccess(int i, Response response) {
+    public void onApiRequestSuccess(int i, @NonNull Response response) {
      Log.d(LOG_TAG,response.body().toString());
         try {
             JSONObject jsonObj = new JSONObject(response.body().toString());

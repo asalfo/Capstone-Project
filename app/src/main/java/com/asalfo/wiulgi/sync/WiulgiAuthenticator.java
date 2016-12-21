@@ -6,6 +6,8 @@ import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * Manages "Authentication" to Wiulgi's backend service.  The SyncAdapter framework
@@ -22,6 +24,7 @@ public class WiulgiAuthenticator extends AbstractAccountAuthenticator {
     }
 
     // No properties to edit.
+    @NonNull
     @Override
     public Bundle editProperties(
             AccountAuthenticatorResponse r, String s) {
@@ -29,6 +32,7 @@ public class WiulgiAuthenticator extends AbstractAccountAuthenticator {
     }
 
     // Because we're not actually adding an account to the device, just return null.
+    @Nullable
     @Override
     public Bundle addAccount(
             AccountAuthenticatorResponse r,
@@ -40,6 +44,7 @@ public class WiulgiAuthenticator extends AbstractAccountAuthenticator {
     }
 
     // Ignore attempts to confirm credentials
+    @Nullable
     @Override
     public Bundle confirmCredentials(
             AccountAuthenticatorResponse r,
@@ -49,6 +54,7 @@ public class WiulgiAuthenticator extends AbstractAccountAuthenticator {
     }
 
     // Getting an authentication token is not supported
+    @NonNull
     @Override
     public Bundle getAuthToken(
             AccountAuthenticatorResponse r,
@@ -59,12 +65,14 @@ public class WiulgiAuthenticator extends AbstractAccountAuthenticator {
     }
 
     // Getting a label for the auth token is not supported
+    @NonNull
     @Override
     public String getAuthTokenLabel(String s) {
         throw new UnsupportedOperationException();
     }
 
     // Updating user credentials is not supported
+    @NonNull
     @Override
     public Bundle updateCredentials(
             AccountAuthenticatorResponse r,
@@ -74,6 +82,7 @@ public class WiulgiAuthenticator extends AbstractAccountAuthenticator {
     }
 
     // Checking features for the account is not supported
+    @NonNull
     @Override
     public Bundle hasFeatures(
             AccountAuthenticatorResponse r,

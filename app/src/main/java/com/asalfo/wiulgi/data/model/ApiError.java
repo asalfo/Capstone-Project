@@ -1,5 +1,7 @@
 package com.asalfo.wiulgi.data.model;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by asalfo on 23/06/16.
  */
@@ -64,6 +66,7 @@ public class ApiError {
         this.detail = detail;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "ApiError{" +

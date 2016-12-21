@@ -64,6 +64,12 @@
     <style name="ItemPrice" parent="PrimaryText">
         <item name="android:textSize">@dimen/item_price_text_size</item>
         <item name="fontPath">fonts/Roboto-Regular.ttf</item>
+        <item name="android:textColor">@color/price_text_white</item>
+    </style>
+
+
+    <style name="ItemPriceDetail" parent="ItemPrice">
+        <item name="android:textColor">@color/price_text</item>
     </style>
 
 

@@ -2,6 +2,7 @@ package com.asalfo.wiulgi.ui;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
@@ -32,7 +33,7 @@ public class ItemHeaderBehavior extends CoordinatorLayout.Behavior<ItemHeaderVie
     }
 
 
-    public static int getToolbarHeight(Context context) {
+    public static int getToolbarHeight(@NonNull Context context) {
         int result = 0;
         TypedValue tv = new TypedValue();
         if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
@@ -49,7 +50,7 @@ public class ItemHeaderBehavior extends CoordinatorLayout.Behavior<ItemHeaderVie
 
 
     @Override
-    public boolean onDependentViewChanged(CoordinatorLayout parent, ItemHeaderView child, View dependency) {
+    public boolean onDependentViewChanged(CoordinatorLayout parent, @NonNull ItemHeaderView child, @NonNull View dependency) {
         shouldInitProperties();
 
         int maxScroll = ((AppBarLayout) dependency).getTotalScrollRange();

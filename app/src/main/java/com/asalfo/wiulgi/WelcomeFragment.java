@@ -2,6 +2,8 @@ package com.asalfo.wiulgi;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -21,8 +23,10 @@ import static android.app.Activity.RESULT_OK;
 public class WelcomeFragment  extends Fragment {
 
 
+    @Nullable
     @BindView(R.id.sign_up)
     Button mSignUp;
+    @Nullable
     @BindView(R.id.sign_in_link)
     TextView mSignIn;
 
@@ -33,7 +37,7 @@ public class WelcomeFragment  extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.welcome_fragment, container, false);

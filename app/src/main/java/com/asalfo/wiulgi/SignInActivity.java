@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.asalfo.wiulgi.auth.ProfileManager;
 import com.asalfo.wiulgi.data.provider.WiulgiContract;
+import com.asalfo.wiulgi.service.UtilityService;
 import com.asalfo.wiulgi.util.Settings;
 import com.asalfo.wiulgi.auth.User;
 import com.asalfo.wiulgi.event.MessageEvent;
@@ -50,8 +53,10 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
     @BindString(R.string.no_connection)
     String mNoConnextion;
 
+    @Nullable
     @BindView(R.id.email_address)
     EditText mEmailAddressEditText;
+    @Nullable
     @BindView(R.id.password)
     EditText mPasswordEditText;
 
@@ -187,14 +192,14 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEvent event){
+    public void onMessageEvent(@NonNull MessageEvent event){
 
         if(event.getType() != Constants.ONLY_MESSAGE)
             return;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
+            public void onClick(@NonNull DialogInterface dialog, int id) {
                dialog.cancel();
             }
         });
@@ -238,7 +243,7 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
     }
 
     @Override
-    public void onApiRequestSuccess(int i, Response response) {
+    public void onApiRequestSuccess(int i, @NonNull Response response) {
         if(mProgess.isShowing()) {
             mProgess.dismiss();
         }
@@ -252,6 +257,9 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
             }
         }).start();
 
+        UtilityService.requestRecommendation(this);
+        Utils.configureGCMTask(this);
+
         setResult(RESULT_OK);
         finish();
 
@@ -259,7 +267,7 @@ public class SignInActivity extends AppCompatActivity  implements WiulgiApi.OnAp
 
 
 
-    private void updateItems(User user){
+    private void updateItems(@NonNull User user){
 
         ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
 

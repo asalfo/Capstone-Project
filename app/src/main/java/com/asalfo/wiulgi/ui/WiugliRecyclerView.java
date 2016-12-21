@@ -17,6 +17,8 @@
 package com.asalfo.wiulgi.ui;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
@@ -28,6 +30,7 @@ import android.view.View;
 public class WiugliRecyclerView extends RecyclerView {
     private View mEmptyView;
 
+    @NonNull
     private AdapterDataObserver mDataObserver = new AdapterDataObserver() {
         @Override
         public void onChanged() {
@@ -58,7 +61,7 @@ public class WiugliRecyclerView extends RecyclerView {
     }
 
     @Override
-    public void setAdapter(RecyclerView.Adapter adapter) {
+    public void setAdapter(@Nullable RecyclerView.Adapter adapter) {
         if (getAdapter() != null) {
             getAdapter().unregisterAdapterDataObserver(mDataObserver);
         }

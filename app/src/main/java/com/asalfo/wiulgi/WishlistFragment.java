@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -34,11 +36,15 @@ public class WishlistFragment extends BaseFragment {
 
 
 
+    @Nullable
     @BindView(R.id.recycler_view)
     WiugliRecyclerView mRecyclerView;
+    @Nullable
     @BindView(R.id.recyclerview_item_empty)
     TextView mEmptyView;
+    @Nullable
     private ItemAdapter mAdapter;
+    @Nullable
     private OnFragmentInteractionListener mListener;
 
 
@@ -73,7 +79,7 @@ public class WishlistFragment extends BaseFragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
 
@@ -177,6 +183,7 @@ public class WishlistFragment extends BaseFragment {
         }
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         ItemLoader loader = ItemLoader.newAllItemsInstance(getActivity());

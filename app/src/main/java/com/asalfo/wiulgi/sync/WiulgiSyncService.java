@@ -3,11 +3,13 @@ package com.asalfo.wiulgi.sync;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 public class WiulgiSyncService extends Service {
     private static final Object sSyncAdapterLock = new Object();
-    private static WiulgiSyncAdapter sWiulgiSyncAdapter = null;
+    @Nullable
+    private  WiulgiSyncAdapter sWiulgiSyncAdapter = null;
 
     @Override
     public void onCreate() {

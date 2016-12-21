@@ -22,6 +22,7 @@ public abstract class BaseFragment extends Fragment  implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
 
+    @Nullable
     private String mTitle;
 
     public final static String ACTIVITY_TITLE = "activity_title";
@@ -33,6 +34,7 @@ public abstract class BaseFragment extends Fragment  implements
 
 
 
+    @Nullable
     public String getTitle(){
         return mTitle;
     }

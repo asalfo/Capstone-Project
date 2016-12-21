@@ -3,6 +3,8 @@ package com.asalfo.wiulgi.service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.asalfo.wiulgi.ItemDetailActivity;
 import com.asalfo.wiulgi.data.provider.WiulgiContract;
@@ -15,6 +17,7 @@ public class DatabaseUpdateTask  extends AsyncTask<String, Integer, Boolean> {
 
     Context mContext;
     ContentValues mUpdateValues;
+    @Nullable
     AsyncCallback mDelegate = null;
 
 
@@ -24,6 +27,7 @@ public class DatabaseUpdateTask  extends AsyncTask<String, Integer, Boolean> {
         mContext = context;
     }
 
+    @NonNull
     protected Boolean doInBackground(String... ids) {
         Boolean result = true;
 

@@ -3,6 +3,7 @@ package com.asalfo.wiulgi.data.model;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.asalfo.wiulgi.data.provider.WiulgiContract;
 import com.google.android.gms.maps.model.LatLng;
@@ -65,7 +66,7 @@ public class Item  extends Model implements Parcelable {
 
 
 
-    public Item(Cursor cursor){
+    public Item(@NonNull Cursor cursor){
 
         mId = cursor.getString(cursor.getColumnIndex(ItemsColumns._ID));
         mMongoId = cursor.getString(cursor.getColumnIndex(ItemsColumns.MONGO_ID));
@@ -80,9 +81,14 @@ public class Item  extends Model implements Parcelable {
         mVoteCount = Integer.valueOf(cursor.getString(cursor.getColumnIndex(ItemsColumns.VOTE_COUNT)));
         mThumbnail = cursor.getString(cursor.getColumnIndex(ItemsColumns.THUMBNAIL));
 
-        Double latitude = Double.valueOf(cursor.getString(cursor.getColumnIndex(ItemsColumns.LATITUDE)));
-        Double longitude = Double.valueOf(cursor.getString(cursor.getColumnIndex(ItemsColumns.LONGITUDE)));
-        mLocation = new LatLng(latitude,longitude);
+        String lat = cursor.getString(cursor.getColumnIndex(ItemsColumns.LATITUDE));
+        String lon = cursor.getString(cursor.getColumnIndex(ItemsColumns.LONGITUDE));
+        if(lat != null && lon != null){
+            Double latitude = Double.valueOf(lat);
+            Double longitude = Double.valueOf(lon);
+            mLocation = new LatLng(latitude,longitude);
+        }
+
         mFavorited = cursor.getInt(cursor.getColumnIndex(ItemsColumns.FAVORITED)) > 0;
         mRecommended = cursor.getInt(cursor.getColumnIndex(ItemsColumns.RECOMMENDED)) > 0;
         mWished = cursor.getInt(cursor.getColumnIndex(ItemsColumns.WISHED)) > 0;
@@ -93,16 +99,18 @@ public class Item  extends Model implements Parcelable {
 
     public static final Parcelable.Creator<Item> CREATOR
             = new Parcelable.Creator<Item>() {
-        public Item createFromParcel(Parcel in) {
+        @NonNull
+        public Item createFromParcel(@NonNull Parcel in) {
             return new Item(in);
         }
 
+        @NonNull
         public Item[] newArray(int size) {
             return new Item[size];
         }
     };
 
-    private Item(Parcel in) {
+    private Item(@NonNull Parcel in) {
 
         this.mId = in.readString();
         this.mMongoId = in.readString();
@@ -129,7 +137,7 @@ public class Item  extends Model implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         long time;
 
         dest.writeString(mId);

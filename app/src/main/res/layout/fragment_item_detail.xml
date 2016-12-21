@@ -9,8 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.asalfo.wiulgi.ItemDetailActivityFragment"
-    tools:ignore="MissingPrefix">
+    tools:context="com.asalfo.wiulgi.ItemDetailActivityFragment">
 
 
 
@@ -58,7 +57,8 @@
                 android:text="@string/brand"
                 app:layout_columnWeight="1"
                 android:textSize="16sp"
-                fontPath="fonts/Roboto-Medium.ttf"/>
+                fontPath="fonts/Roboto-Medium.ttf"
+                tools:ignore="MissingPrefix" />
 
             <TextView
                 android:id="@+id/itemBrand"
@@ -69,7 +69,8 @@
                 android:text="@string/model"
                 app:layout_columnWeight="1"
                 android:textSize="16sp"
-                fontPath="fonts/Roboto-Medium.ttf"/>
+                fontPath="fonts/Roboto-Medium.ttf"
+                tools:ignore="MissingPrefix" />
 
             <TextView
                 android:id="@+id/itemModel"
@@ -80,7 +81,8 @@
                 android:text="@string/color"
                 app:layout_columnWeight="1"
                 android:textSize="16sp"
-                fontPath="fonts/Roboto-Medium.ttf"/>
+                fontPath="fonts/Roboto-Medium.ttf"
+                tools:ignore="MissingPrefix" />
 
             <TextView
                 android:id="@+id/itemColor"
@@ -93,7 +95,7 @@
                 app:layout_columnWeight="1"
                 android:textSize="16sp"
                 fontPath="fonts/Roboto-Medium.ttf"
-                />
+                tools:ignore="MissingPrefix" />
 
             <TextView
                 android:id="@+id/itemSize"
@@ -109,7 +111,6 @@
         android:layout_below="@+id/infoGrid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:numStars="5"
         android:rating="3.5"
         android:scaleX="0.7"

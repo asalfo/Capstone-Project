@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -39,17 +41,23 @@ public class ItemDetailActivity extends AppCompatActivity
 
     public static final String LOG_TAG = ItemDetailActivity.class.getSimpleName();
 
+    @Nullable
     @BindView(R.id.container)
     CoordinatorLayout mCoordinatorLayout;
+    @Nullable
     @BindView(R.id.scroll_view)
     NestedScrollView mScrollView;
+    @Nullable
     @BindView(R.id.item_header_view)
     ItemHeaderView mItemHeaderView;
+    @Nullable
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
+    @Nullable
     @BindView(R.id.collapsingToolbarLayout)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @Nullable
     @BindView(R.id.appBarLayout)
     AppBarLayout mAppBarLayout;
 
@@ -60,7 +68,7 @@ public class ItemDetailActivity extends AppCompatActivity
     WiulgiApi mApi;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
 
@@ -75,7 +83,7 @@ public class ItemDetailActivity extends AppCompatActivity
         mItemHeaderView.addOnThumbnailChangedListener(new ItemHeaderView.OnThumbnailChangedListener(){
 
             @Override
-            public void onThumbnailChanged(final ItemHeaderView itemHeaderView, String thumbnailUrl) {
+            public void onThumbnailChanged(@NonNull final ItemHeaderView itemHeaderView, String thumbnailUrl) {
 
                 int imageSize = getResources().getDimensionPixelSize(R.dimen.image_size)
                         * Constants.IMAGE_ANIM_MULTIPLIER;
@@ -94,7 +102,7 @@ public class ItemDetailActivity extends AppCompatActivity
 
 
             @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+            public void onOffsetChanged(@NonNull AppBarLayout appBarLayout, int verticalOffset) {
 
                 int maxScroll = appBarLayout.getTotalScrollRange();
                 float percentage = (float) Math.abs(verticalOffset) / (float) maxScroll;
@@ -140,7 +148,7 @@ public class ItemDetailActivity extends AppCompatActivity
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(ItemEvent event){
+    public void onMessageEvent(@NonNull ItemEvent event){
 
         Snackbar snackbar = Snackbar
                 .make(mCoordinatorLayout,event.getMessage(), Snackbar.LENGTH_LONG);
@@ -170,7 +178,7 @@ public class ItemDetailActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(final Item item) {
+    public void onFragmentInteraction(@NonNull final Item item) {
         mItemHeaderView.setItem(item);
 
     }
@@ -192,7 +200,7 @@ public class ItemDetailActivity extends AppCompatActivity
     }
 
     @Override
-    public void onApiRequestSuccess(int i, Response response) {
+    public void onApiRequestSuccess(int i, @NonNull Response response) {
         Log.v(LOG_TAG,response.body().toString());
     }
 }

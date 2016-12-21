@@ -3,6 +3,8 @@ package com.asalfo.wiulgi.auth;
 import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.util.Pair;
 
@@ -64,16 +66,18 @@ public class User extends Model implements Parcelable {
 
     public static final Parcelable.Creator<User> CREATOR
             = new Parcelable.Creator<User>() {
-        public User createFromParcel(Parcel in) {
+        @NonNull
+        public User createFromParcel(@NonNull Parcel in) {
             return new User(in);
         }
 
+        @NonNull
         public User[] newArray(int size) {
             return new User[size];
         }
     };
 
-    private User(Parcel in) {
+    private User(@NonNull Parcel in) {
 
         this.mId = in.readString();
         this.mUsername = in.readString();
@@ -95,7 +99,7 @@ public class User extends Model implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         long time;
 
         dest.writeString(mId);
@@ -203,6 +207,7 @@ public class User extends Model implements Parcelable {
     }
 
 
+    @Nullable
     public static User fromString(String userString) {
         return (User) Model.fromString(userString, User.class);
     }

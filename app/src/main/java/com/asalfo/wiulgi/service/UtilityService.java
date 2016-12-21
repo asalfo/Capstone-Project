@@ -22,6 +22,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -29,6 +32,7 @@ import com.asalfo.wiulgi.util.Constants;
 import com.asalfo.wiulgi.util.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.gcm.TaskParams;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -49,16 +53,26 @@ public class UtilityService extends IntentService {
 
     private static final String ACTION_LOCATION_UPDATED = "location_updated";
     private static final String ACTION_REQUEST_LOCATION = "request_location";
+    private static final String ACTION_RECOMMENDATIONS = "request_recommendations";
 
 
+    @NonNull
     public static IntentFilter getLocationUpdatedIntentFilter() {
         return new IntentFilter(UtilityService.ACTION_LOCATION_UPDATED);
     }
 
 
-    public static void requestLocation(Context context) {
+    public static void requestLocation(@NonNull Context context) {
         Intent intent = new Intent(context, UtilityService.class);
         intent.setAction(UtilityService.ACTION_REQUEST_LOCATION);
+        context.startService(intent);
+    }
+
+
+    public static void requestRecommendation(@NonNull Context context) {
+        Intent intent = new Intent(context, UtilityService.class);
+        intent.putExtra(Constants.TAG, Constants.INIT);
+        intent.setAction(UtilityService.ACTION_RECOMMENDATIONS);
         context.startService(intent);
     }
 
@@ -68,12 +82,18 @@ public class UtilityService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleIntent(@Nullable Intent intent) {
         String action = intent != null ? intent.getAction() : null;
         if (ACTION_REQUEST_LOCATION.equals(action)) {
             requestLocationInternal();
         }else if (ACTION_LOCATION_UPDATED.equals(action)) {
             locationUpdated(intent);
+        }else if(ACTION_RECOMMENDATIONS.equals(action)){
+            RecommendationTaskService recommendationTaskService = new RecommendationTaskService(this);
+
+            recommendationTaskService.onRunTask(
+                    new TaskParams(intent.getStringExtra(Constants.TAG),
+                            new Bundle()));
         }
     }
 
@@ -128,7 +148,7 @@ public class UtilityService extends IntentService {
     /**
      * Called when the location has been updated
      */
-    private void locationUpdated(Intent intent) {
+    private void locationUpdated(@NonNull Intent intent) {
         Log.v(TAG, ACTION_LOCATION_UPDATED);
 
         // Extra new location
@@ -145,6 +165,13 @@ public class UtilityService extends IntentService {
             // to the updated location
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
+    }
+
+
+    private  void syncRecommendations( Intent intent){
+
+
+
     }
 
 

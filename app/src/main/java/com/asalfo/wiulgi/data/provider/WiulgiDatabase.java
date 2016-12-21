@@ -3,13 +3,13 @@ package com.asalfo.wiulgi.data.provider;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
+import android.support.annotation.NonNull;
 
 
 public class WiulgiDatabase  extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "wiulgi.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
 
 
     public WiulgiDatabase(Context context){
@@ -17,7 +17,7 @@ public class WiulgiDatabase  extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(@NonNull SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + WiulgiProvider.Tables.ITEMS + " ("
                 + WiulgiContract.ItemsColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + WiulgiContract.ItemsColumns.MONGO_ID + " TEXT,"
@@ -29,8 +29,8 @@ public class WiulgiDatabase  extends SQLiteOpenHelper {
                 + WiulgiContract.ItemsColumns.MODEL + " TEXT,"
                 + WiulgiContract.ItemsColumns.SIZE + " INTEGER,"
                 + WiulgiContract.ItemsColumns.THUMBNAIL+ " TEXT NOT NULL, "
-                + WiulgiContract.ItemsColumns.LATITUDE + " TEXT NOT NULL, "
-                + WiulgiContract.ItemsColumns.LONGITUDE + " TEXT NOT NULL, "
+                + WiulgiContract.ItemsColumns.LATITUDE + " TEXT, "
+                + WiulgiContract.ItemsColumns.LONGITUDE + " TEXT, "
                 + WiulgiContract.ItemsColumns.VOTE_AVERAGE + " FLOAT NOT NULL DEFAULT 0.0 ,"
                 + WiulgiContract.ItemsColumns.VOTE_COUNT + " INTEGER NOT NULL DEFAULT 0 ,"
                 + WiulgiContract.ItemsColumns.PRICE + " FLOAT NOT NULL DEFAULT 0.0 ,"
@@ -41,7 +41,7 @@ public class WiulgiDatabase  extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + WiulgiProvider.Tables.ITEMS);
         onCreate(db);
     }

@@ -2,6 +2,8 @@ package com.asalfo.wiulgi.util;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.asalfo.wiulgi.WApplication;
@@ -10,6 +12,7 @@ import com.asalfo.wiulgi.data.model.Model;
 public class Settings {
 
     private final Context mContext;
+    @NonNull
     private final SettingsObject mSettings;
 
 
@@ -32,8 +35,10 @@ public class Settings {
     }
 
 
+    @NonNull
     private static Settings instance = new Settings();
 
+    @NonNull
     public static Settings getInstance() {
         return instance;
     }

@@ -1,5 +1,7 @@
 package com.asalfo.wiulgi.http;
 
+import android.support.annotation.NonNull;
+
 import com.asalfo.wiulgi.data.model.ApiError;
 import com.asalfo.wiulgi.http.ApiServiceGenerator;
 
@@ -16,7 +18,7 @@ import retrofit2.Response;
 public class ApiErrorUtil {
 
 
-        public static ApiError parseError(Response<?> response) {
+        public static ApiError parseError(@NonNull Response<?> response) {
             Converter<ResponseBody, ApiError> converter =
                     ApiServiceGenerator.retrofit()
                             .responseBodyConverter(ApiError.class, new Annotation[0]);

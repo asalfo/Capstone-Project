@@ -5,6 +5,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
@@ -42,22 +44,31 @@ import butterknife.ButterKnife;
 public class ItemHeaderView extends RelativeLayout {
 
 
+    @Nullable
     @BindView(R.id.item_info_wrapper)
     LinearLayout mItemInfoWrapper;
+    @Nullable
     @BindView(R.id.item_actions)
     LinearLayout mItemActions;
+    @Nullable
     @BindView(R.id.item_thumbnail)
     ImageView mItemThumnail;
+    @Nullable
     @BindView(R.id.item_name)
     TextView mItemName;
+    @Nullable
     @BindView(R.id.item_price)
     TextView mItemPrice;
+    @Nullable
     @BindView(R.id.item_distance)
     TextView mItemDistance;
+    @Nullable
     @BindView(R.id.item_action_share)
     ImageView mItemActionShare;
+    @Nullable
     @BindView(R.id.item_action_wishlist)
     ImageView mItemActionWishlist;
+    @Nullable
     @BindView(R.id.item_action_like)
     ImageView mItemActionLike;
 
@@ -170,7 +181,7 @@ public class ItemHeaderView extends RelativeLayout {
     }
 
 
-    public void setItem(Item item) {
+    public void setItem(@NonNull Item item) {
 
         mItem = item;
 
@@ -186,18 +197,22 @@ public class ItemHeaderView extends RelativeLayout {
     }
 
 
+    @Nullable
     public ImageView getItemThumbnail() {
         return mItemThumnail;
     }
 
+    @Nullable
     public ImageView getItemActionShare() {
         return mItemActionShare;
     }
 
+    @Nullable
     public ImageView getItemActionLike() {
         return mItemActionLike;
     }
 
+    @Nullable
     public ImageView getItemActionWishlist() {
         return mItemActionWishlist;
     }
@@ -207,7 +222,7 @@ public class ItemHeaderView extends RelativeLayout {
     }
 
 
-    public void setupAction(final Item item) {
+    public void setupAction(@NonNull final Item item) {
 
         final String shareTitle = item.getTitle();
         final String shareText = "Wiulgi#" + item.getTitle() + item.getDescription();
@@ -270,7 +285,7 @@ public class ItemHeaderView extends RelativeLayout {
     }
 
 
-    public void applyPalette(Palette palette) {
+    public void applyPalette(@NonNull Palette palette) {
         Palette.Swatch textSwatch = palette.getMutedSwatch();
 
         if (textSwatch == null) {
@@ -296,7 +311,7 @@ public class ItemHeaderView extends RelativeLayout {
      *
      * @param listener The listener that will be called when the thumbnail changes.]
      */
-    public void addOnThumbnailChangedListener(OnThumbnailChangedListener listener) {
+    public void addOnThumbnailChangedListener(@Nullable OnThumbnailChangedListener listener) {
         if (mListeners == null) {
             mListeners = new ArrayList<>();
         }
@@ -311,7 +326,7 @@ public class ItemHeaderView extends RelativeLayout {
      *
      * @param listener the listener to remove.
      */
-    public void removeOnThumbnailChangedListener(OnThumbnailChangedListener listener) {
+    public void removeOnThumbnailChangedListener(@Nullable OnThumbnailChangedListener listener) {
         if (mListeners != null && listener != null) {
             mListeners.remove(listener);
         }

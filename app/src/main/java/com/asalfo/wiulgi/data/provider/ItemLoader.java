@@ -4,19 +4,22 @@ package com.asalfo.wiulgi.data.provider;
 import android.content.Context;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.content.CursorLoader;
 
 public class ItemLoader  extends CursorLoader {
 
-    public static ItemLoader newAllItemsInstance(Context context) {
+    @NonNull
+    public static ItemLoader newAllItemsInstance(@NonNull Context context) {
         return new ItemLoader(context, WiulgiContract.Items.buildDirUri());
     }
 
-    public static ItemLoader newInstanceForItemId(Context context, long itemId) {
+    @NonNull
+    public static ItemLoader newInstanceForItemId(@NonNull Context context, long itemId) {
         return new ItemLoader(context, WiulgiContract.Items.buildItemUri(itemId));
     }
 
-    private ItemLoader(Context context, Uri uri) {
+    private ItemLoader(@NonNull Context context, Uri uri) {
         super(context, uri, Query.PROJECTION, null, null, WiulgiContract.Items.DEFAULT_SORT);
     }
 

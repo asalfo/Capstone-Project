@@ -53,7 +53,7 @@
         <activity
             android:name=".ProfileActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden|adjustPan" >
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.asalfo.wiulgi.MainActivity" />
@@ -65,6 +65,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.asalfo.wiulgi.MainActivity" />
         </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.asalfo.wiulgi.MainActivity" />
+        </activity>
 
         <provider
             android:name=".data.provider.WiulgiProvider"
@@ -72,7 +79,16 @@
             android:exported="false"
             android:syncable="true" />
 
-        <!-- SyncAdapter's dummy authentication service -->
+        <service
+            android:name=".service.RecommendationTaskService"
+            android:exported="true"
+            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
+            <intent-filter>
+                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
+            </intent-filter>
+        </service>
+
+        <!-- SyncAdapter's  authentication service -->
         <service android:name=".sync.WiulgiAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -95,11 +111,11 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
-        <service android:name="com.google.android.gms.analytics.AnalyticsService"
+        <service
+            android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
         <service android:name=".service.UtilityService" />
-
         <service android:name=".widget.WidgetIntentService" />
 
         <receiver
@@ -109,19 +125,18 @@
                 <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".widget.WidgetProvider"
-            android:label="@string/widget_title" >
+            android:label="@string/widget_title">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.example.android.sunshine.app.ACTION_DATA_UPDATED" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
+
+            <meta-data
+                android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info_hottest" />
         </receiver>
-
-
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -129,7 +144,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBZO2dtOHz1ZrFMXi1dAbvqaNtuM5C0wAA" />
-
     </application>
 
 </manifest>

@@ -1,5 +1,7 @@
 package com.asalfo.wiulgi.data.model;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -22,7 +24,8 @@ public abstract class Model {
         private DateSerializer() {
         }
 
-        public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+        @Nullable
+        public Date deserialize(@NonNull JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
             String[] access = Model.DATE_FORMATS;
             int i = 0;
             while (i < access.length) {
@@ -42,7 +45,7 @@ public abstract class Model {
         return new Gson().toJson(this);
     }
 
-    public static <T> Object fromString(String objectString, Class<T> classType) {
+    public static <T> Object fromString(String objectString, @NonNull Class<T> classType) {
         if (TextUtils.isEmpty(objectString)) {
             return null;
         }

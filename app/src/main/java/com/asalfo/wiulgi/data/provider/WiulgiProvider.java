@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 
 public class WiulgiProvider extends ContentProvider {
 
+    @Nullable
     private SQLiteOpenHelper mOpenHelper;
 
     interface Tables {
@@ -30,6 +32,7 @@ public class WiulgiProvider extends ContentProvider {
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
+    @NonNull
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = WiulgiContract.CONTENT_AUTHORITY;
@@ -62,7 +65,7 @@ public class WiulgiProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
         final SelectionBuilder builder = buildSelection(uri);
         Cursor cursor = builder.where(selection, selectionArgs).query(db, projection, sortOrder);
@@ -72,7 +75,7 @@ public class WiulgiProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Uri insert(Uri uri, ContentValues contentValues) {
+    public Uri insert(@NonNull Uri uri, @NonNull ContentValues contentValues) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         switch (match) {
@@ -91,7 +94,7 @@ public class WiulgiProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final SelectionBuilder builder = buildSelection(uri);
         getContext().getContentResolver().notifyChange(uri, null);
@@ -99,20 +102,20 @@ public class WiulgiProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final SelectionBuilder builder = buildSelection(uri);
         getContext().getContentResolver().notifyChange(uri, null);
         return builder.where(selection, selectionArgs).delete(db);
     }
 
-    private SelectionBuilder buildSelection(Uri uri) {
+    private SelectionBuilder buildSelection(@NonNull Uri uri) {
         final SelectionBuilder builder = new SelectionBuilder();
         final int match = sUriMatcher.match(uri);
         return buildSelection(uri, match, builder);
     }
 
-    private SelectionBuilder buildSelection(Uri uri, int match, SelectionBuilder builder) {
+    private SelectionBuilder buildSelection(@NonNull Uri uri, int match, @NonNull SelectionBuilder builder) {
         final List<String> paths = uri.getPathSegments();
         switch (match) {
             case ITEMS: {
@@ -133,8 +136,9 @@ public class WiulgiProvider extends ContentProvider {
      * a {@link SQLiteDatabase} transaction. All changes will be rolled back if
      * any single one fails.
      */
+    @NonNull
     @Override
-    public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations)
+    public ContentProviderResult[] applyBatch(@NonNull ArrayList<ContentProviderOperation> operations)
             throws OperationApplicationException {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         db.beginTransaction();
@@ -163,8 +167,8 @@ public class WiulgiProvider extends ContentProvider {
      * @param column Column to identify the object.
      * @throws android.database.SQLException
      */
-    private long insertOrUpdateByMongoId(SQLiteDatabase db, Uri uri, String table,
-                                    ContentValues values, String column) throws SQLException {
+    private long insertOrUpdateByMongoId(@NonNull SQLiteDatabase db, @NonNull Uri uri, String table,
+                                         @NonNull ContentValues values, String column) throws SQLException {
         try {
           return  db.insertOrThrow(table, null, values);
         } catch (SQLiteConstraintException e) {

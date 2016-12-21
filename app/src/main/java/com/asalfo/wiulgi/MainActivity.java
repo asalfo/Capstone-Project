@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -17,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,20 +47,26 @@ public class MainActivity extends AppCompatActivity implements
         HottestFragment.OnFragmentInteractionListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
+    public static final String FRAG = "fragment";
+    public static final String RECOMMENDED = "recommended";
     public static final int REQUEST_SIGNIN = 1;
     public static final int REQUEST_SIGNUP = 2;
     public static final int REQUEST_PROFILE = 1;
+    @Nullable
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
+    @Nullable
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
+    @Nullable
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
 
 
 
     private WelcomeFragment mWelcomeFragment;
+    @Nullable
     private Fragment mCurrentFragment;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
@@ -135,7 +143,9 @@ public class MainActivity extends AppCompatActivity implements
 
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        if(mCurrentFragment == null){
+        if(getIntent().hasExtra(FRAG)){
+            mCurrentFragment = RecommendedFragment.newInstance(getTitle().toString());
+        }else{
             mCurrentFragment = HottestFragment.newInstance(getTitle().toString());
         }
 
@@ -147,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements
 
        if(!Settings.getInstance().hasFirstSync()){
             WiulgiSyncAdapter.syncImmediately(this);
-         Settings.getInstance().setFirstSync(true);
+            Settings.getInstance().setFirstSync(true);
        }
 
         setupLocationService(savedInstanceState);
@@ -201,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
 
@@ -218,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -236,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements
             setTitle(R.string.hottest_title);
             mCurrentFragment = HottestFragment.newInstance(getTitle().toString());
         } else if (id == R.id.nav_setting) {
-
+            startActivity(new Intent(this,SettingsActivity.class));
         } else if (id == R.id.nav_sign_in) {
             Intent login = new Intent(this, SignInActivity.class);
             startActivityForResult(login, REQUEST_SIGNIN);
@@ -256,12 +266,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri, Class<?> cls,ItemAdapter.ViewHolder vh) {
+    public void onFragmentInteraction(Uri uri, Class<?> cls, @NonNull ItemAdapter.ViewHolder vh) {
 
 
         Intent intent = new Intent(this, cls)
                 .setData(uri);
-
 
         ActivityOptionsCompat activityOptions =
                 ActivityOptionsCompat.makeSceneTransitionAnimation(this,
@@ -286,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements
      * @param savedInstanceState
      */
 
-    private void setupLocationService(Bundle savedInstanceState) {
+    private void setupLocationService(@Nullable Bundle savedInstanceState) {
         // Check fine location permission has been granted
         if (!Utils.checkFineLocationPermission(this)) {
             // See if user has denied permission in the past

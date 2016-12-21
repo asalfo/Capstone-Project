@@ -2,6 +2,7 @@ package com.asalfo.wiulgi.data.provider;
 
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 public class WiulgiContract {
 
@@ -65,7 +66,7 @@ public class WiulgiContract {
         }
 
         /** Read item ID item detail URI. */
-        public static long getItemId(Uri itemUri) {
+        public static long getItemId(@NonNull Uri itemUri) {
             return Long.parseLong(itemUri.getPathSegments().get(1));
         }
 

@@ -3,6 +3,8 @@ package com.asalfo.wiulgi.ui;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
 import com.asalfo.wiulgi.data.provider.WiulgiContract;
@@ -10,11 +12,13 @@ import com.asalfo.wiulgi.data.provider.WiulgiContract;
 
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH>{
   private static final String LOG_TAG = CursorRecyclerViewAdapter.class.getSimpleName();
+  @Nullable
   private Cursor mCursor;
   private boolean dataIsValid;
   private int rowIdColumn;
+  @NonNull
   private final DataSetObserver mDataSetObserver;
-  CursorRecyclerViewAdapter(Context context, Cursor cursor){
+  CursorRecyclerViewAdapter(Context context, @Nullable Cursor cursor){
     mCursor = cursor;
     dataIsValid = cursor != null;
     rowIdColumn = dataIsValid ? mCursor.getColumnIndex(WiulgiContract.ItemsColumns._ID) : -1;
@@ -24,6 +28,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     }
   }
 
+  @Nullable
   Cursor getCursor(){
     return mCursor;
   }
@@ -63,7 +68,8 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     onBindViewHolder(viewHolder, mCursor);
   }
 
-  public Cursor swapCursor(Cursor newCursor){
+  @Nullable
+  public Cursor swapCursor(@NonNull Cursor newCursor){
     if (newCursor == mCursor){
       return null;
     }

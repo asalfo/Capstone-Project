@@ -3,6 +3,8 @@ package com.asalfo.wiulgi;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.TextUtils;
@@ -34,18 +36,25 @@ public class SignUpActivity extends AppCompatActivity implements OnKeyListener,W
         private String mEmailAddress;
         private String mPassword;
 
+        @Nullable
         @BindView(R.id.username)
         EditText mUsernameText;
+        @Nullable
         @BindView(R.id.email_address)
         EditText mEmailText;
+        @Nullable
         @BindView(R.id.password)
         EditText mPasswordText;
+        @Nullable
         @BindView(R.id.verify_password)
         EditText mRepeatPasswordText;
+        @Nullable
         @BindView(R.id.btn_sign_up)
         Button mSignupButton;
+        @Nullable
         @BindView(R.id.link_sign_in)
         TextView mLoginLink;
+        @Nullable
         @BindView(R.id.agreement)
         AppCompatCheckBox mAgreement;
 
@@ -153,11 +162,11 @@ public class SignUpActivity extends AppCompatActivity implements OnKeyListener,W
             user.setUsername(username);
             user.setPlainPassword(this.mPassword);
             user.setEmail(this.mEmailAddress);
-            this.mApi.CreateUser(user);
+            this.mApi.createUser(user);
         }
 
         @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
+        public boolean onKey(View v, int keyCode, @NonNull KeyEvent event) {
             if (event.getAction() != 0 || keyCode != 66) {
                 return false;
             }
@@ -168,7 +177,7 @@ public class SignUpActivity extends AppCompatActivity implements OnKeyListener,W
 
 
 
-    public void onApiRequestSuccess(int statusCode, Response response) {
+    public void onApiRequestSuccess(int statusCode, @NonNull Response response) {
 
         User user = (User) response.body();
         if (user != null) {
